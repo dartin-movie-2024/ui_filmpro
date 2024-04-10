@@ -11,6 +11,13 @@ import AssignCharacters from "../components/director/AssignCharacters";
 import SceneDetails from "../components/director/SceneDetails";
 import Assign from "../components/director/Assign";
 import { PATHS } from "../constants";
+import AssignedLocations from "../components/director/AssignedLocations";
+import CharacterCardList from "../components/director/CharacterCardList";
+import LocationCardList from "../components/director/LocationCardList";
+import ApproveCharacterList from "../components/director/ApproveCharacterList";
+import ApproveLocationList from "../components/director/ApproveLocationsList";
+import ApproveSelectedCharacter from "../components/director/ApproveSelectedCharacter";
+import ApproveSelectedLocation from "../components/director/ApproveSelectedLocation";
 
 export const directorRoutes = () => (
   <Route path="/director" element={<Director />}>
@@ -67,6 +74,7 @@ export const directorRoutes = () => (
       }
     />
     <Route path={PATHS.EDIT_CHARACTERS} element={<AssignCharacters />} />
+    <Route path={PATHS.EDIT_LOCATIONS} element={<AssignedLocations />} />
     <Route path={PATHS.ASSIGN} element={<Assign />} />
     <Route path={PATHS.SCENE_DETAILS} element={<SceneDetails />} />
     <Route
@@ -81,6 +89,47 @@ export const directorRoutes = () => (
           searchByField="locationName"
         />
       }
+    />
+    <Route
+      path="/director/assignCharacter"
+      element={
+        <CharacterCardList
+          fetchAPI="api/get_character_setup"
+          fetchType="POST"
+        />
+      }
+    ></Route>
+    <Route
+      path="/director/approveCharacter"
+      element={
+        <ApproveCharacterList
+          fetchAPI="api/director_search/assign_character"
+          fetchType="GET"
+        />
+      }
+    />
+    <Route
+      path="/director/approveSelectedCharacter"
+      element={<ApproveSelectedCharacter />}
+    />
+    <Route
+      path="/director/assignLocation"
+      element={
+        <LocationCardList fetchAPI="api/get_location_setup" fetchType="POST" />
+      }
+    ></Route>
+    <Route
+      path="/director/approveLocation"
+      element={
+        <ApproveLocationList
+          fetchAPI="api/director_search/assign_location"
+          fetchType="GET"
+        />
+      }
+    ></Route>
+    <Route
+      path="/director/approveSelectedLocation"
+      element={<ApproveSelectedLocation />}
     />
     <Route
       path="/director/shootDuration"

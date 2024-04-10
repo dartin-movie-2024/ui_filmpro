@@ -63,11 +63,18 @@ const ListData = ({
   useEffect(() => {
     let isCancelled = false;
     if (isCancelled === false) setLoading(true);
+    const storedData = localStorage.getItem("myData");
+    console.log(storedData);
     axios({
       method: fetchType,
       url: `${serverURL}/${fetchAPI}`,
+      headers: {
+        Authorization: "Bearer " + storedData,
+      },
     })
       .then((result) => {
+        console.log(result);
+        console.log("Verify crew");
         const { rows, columns } = result?.data || { rows: [], columns: [] };
         const columnsWithEditButton = [
           ...columns,

@@ -1,7 +1,6 @@
 import React from "react";
 import MultiProgressComponent from "../../components/reusable-components/MultiProgress";
 import "./index.css";
-import { BrowserRouter } from "react-router-dom";
 
 export const MultiProgressExample = ({ ...props }) => {
   return (
@@ -15,9 +14,7 @@ export const MultiProgressExample = ({ ...props }) => {
         ListData uses <Link>. Link component needs to appear inside a router.
         So wrapping it inside BrowserRouter.
       */}
-      <BrowserRouter>
-        <MultiProgressComponent {...props} />
-      </BrowserRouter>
+      <MultiProgressComponent {...props} />
     </div>
   );
 };

@@ -44,6 +44,28 @@ export const getListEditButton = (rows) => {
     locationSetup: {
       field: "edit",
       headerName: "Edit",
+      renderCell: ({ row: { id } }) => {
+        return (
+          <Link to={PATHS.EDIT_LOCATIONS} state={{ rows, id }}>
+            <IconButton aria-label="edit">
+              <EditIcon />
+            </IconButton>
+          </Link>
+        );
+      },
+    },
+  };
+  
+
+  return editButtonConfigs;
+};
+
+export const getListEditButtonAD = (rows) => {
+  const editButtonConfigsAD = {
+    verifyCrew: {
+      field: "edit",
+      headerName: "Edit",
+      width: 150,
       renderCell: (params) => {
         return (
           <IconButton aria-label="edit">
@@ -52,7 +74,47 @@ export const getListEditButton = (rows) => {
         );
       },
     },
+    sceneSetup: {
+      field: "edit",
+      headerName: "Edit",
+      renderCell: ({ row: { id } }) => {
+        return (
+          <Link to={PATHS.SCENE_DETAILSAD} state={{ rows, id }}>
+          <IconButton aria-label="edit">
+            <EditIcon />
+          </IconButton>
+          </Link>
+        );
+      },
+    },
+    characterSetup: {
+      field: "edit",
+      headerName: "Edit",
+      renderCell: ({ row: { id } }) => {
+        return (
+          <Link to={PATHS.EDIT_CHARACTERSAD} state={{ rows, id }}>
+            <IconButton aria-label="edit">
+              <EditIcon />
+            </IconButton>
+          </Link>
+        );
+      },
+    },
+    locationSetup: {
+      field: "edit",
+      headerName: "Edit",
+      renderCell: ({ row: { id } }) => {
+        return (
+          <Link to={PATHS.EDIT_LOCATIONSAD} state={{ rows, id }}>
+            <IconButton aria-label="edit">
+              <EditIcon />
+            </IconButton>
+          </Link>
+        );
+      },
+    },
   };
+  
 
-  return editButtonConfigs;
+  return editButtonConfigsAD;
 };

@@ -8,7 +8,6 @@ import BarChartIcon from "@material-ui/icons/BarChart";
 import PersonIcon from "@material-ui/icons/Person";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import AssignmentIcon from "@material-ui/icons/Assignment";
-
 export const mainListItems = (
     <div
       style={{
@@ -18,6 +17,7 @@ export const mainListItems = (
         button
         onClick={() => {
           console.log("Button clicked director");
+
         }}
       >
         <ListItemIcon>
@@ -27,6 +27,20 @@ export const mainListItems = (
             }}/>
         </ListItemIcon>
         <ListItemText primary="Director" />
+      </ListItem>
+      <ListItem
+        button
+        onClick={() => {
+          console.log("Button clicked Producer");
+        }}
+      >
+        <ListItemIcon>
+          <GroupIcon
+            style={{
+              color: "#fff",
+            }}/>
+        </ListItemIcon>
+        <ListItemText primary="Producer" />
       </ListItem>
       <ListItem
         button

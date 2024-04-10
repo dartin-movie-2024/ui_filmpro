@@ -42,6 +42,26 @@ export const directorListItems = [
     route: "/director/Setup",
   },
   {
+    text: "Search Characters",
+    icon: "PersonAddIcon",
+    route: "/director/assignCharacter",
+  },
+  {
+    text: "Search Locations",
+    icon: "PinDropIcon",
+    route: "/director/assignLocation",
+  },
+  {
+    text: "Approve Characters",
+    icon: "PersonAddIcon",
+    route: "/director/approveCharacter",
+  },
+  {
+    text: "Approve Locations",
+    icon: "PinDropIcon",
+    route: "/director/approveLocation",
+  },
+  {
     text: "Assign",
     icon: "AssignmentIcon",
     route: PATHS.ASSIGN,
@@ -50,5 +70,74 @@ export const directorListItems = [
     text: "Schedule Output",
     icon: "ScheduleIcon",
     route: "/director/scheduleOutput",
+  },
+];
+export const AssistantdirectorListItems = [
+  {
+    text: "AD Home",
+    icon: "VideocamIcon",
+    route: "/assistantdirector",
+  },
+  {
+    text: "Verify Crew",
+    icon: "GroupIcon",
+    route: PATHS.VERIFY_CREWAD,
+  },
+  {
+    text: "Upload Script",
+    icon: "CloudUploadIcon",
+    route: "/assistantdirector/UploadScript",
+  },
+  {
+    text: "Setup",
+    icon: "BuildIcon",
+    route: "/assistantdirector/SetupAD",
+  },
+  {
+    text: "Search Characters",
+    icon: "PersonAddIcon",
+    route: "/assistantdirector/assignCharacter",
+  },
+  {
+    text: "Search Locations",
+    icon: "PinDropIcon",
+    route: "/assistantdirector/assignLocation",
+  },
+  {
+    text: "Assign",
+    icon: "AssignmentIcon",
+    route: PATHS.ASSIGNAD,
+  },
+];
+export const ProducerListItems = [
+  {
+    text: "Producer",
+    icon: "PersonIcon",
+    route: "/Producer",
+  },
+  {
+    text: "Existing Productions",
+    icon: "AppShortcutIcon",
+    route: "/Producer/ExistingProds",
+  },
+  {
+    text: "Add Production",
+    icon: "AttachMoneyIcon",
+    route: "/Producer/AddProduction",
+  },
+  {
+    text: "Departments",
+    icon: "GroupIcon",
+    route: "/Producer/Departments",
+  },
+  {
+    text: "Designations",
+    icon: "BarChartIcon",
+    route: "/Producer/Designations",
+  },
+  {
+    text: "AddCrew",
+    icon: "AddIcon",
+    route: "/Producer/AddCrew",
   },
 ];
