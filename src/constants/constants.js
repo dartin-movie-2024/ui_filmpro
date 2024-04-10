@@ -110,34 +110,57 @@ export const AssistantdirectorListItems = [
   },
 ];
 export const ProducerListItems = [
+  // {
+  //   text: "Producer",
+  //   icon: "PersonIcon",
+  //   route: "/Producer",
+  // },
   {
-    text: "Producer",
-    icon: "PersonIcon",
-    route: "/Producer",
-  },
-  {
-    text: "Existing Productions",
+    text: "Productions",
     icon: "AppShortcutIcon",
     route: "/Producer/ExistingProds",
   },
-  {
-    text: "Add Production",
-    icon: "AttachMoneyIcon",
-    route: "/Producer/AddProduction",
-  },
+   
+  // {
+  //   text: "Add Production",
+  //   icon: "AttachMoneyIcon",
+  //   route: "/Producer/AddProduction",
+  // },
+  // {
+  //   text: "Add Production",
+  //   icon: "AttachMoneyIcon",
+  //   route: "/Producer/AddProduction",
+  // },
+  // {
+  //   text: "Departments",
+  //   icon: "GroupIcon",
+  //   route: "/Producer/Departments",
+  // },
+  // {
+  //   text: "Designations",
+  //   icon: "BarChartIcon",
+  //   route: "/Producer/Designations",
+  // },
+  // {
+  //   text: "AddCrew",
+  //   icon: "AddIcon",
+  //   route: "/Producer/AddCrew",
+  // },
+];
+export const ProducerListItems_crew = [
   {
     text: "Departments",
     icon: "GroupIcon",
-    route: "/Producer/Departments",
+    route: "/Prod_crew/Departments",
   },
   {
     text: "Designations",
     icon: "BarChartIcon",
-    route: "/Producer/Designations",
+    route: "/Prod_crew/Designations",
   },
   {
     text: "AddCrew",
     icon: "AddIcon",
-    route: "/Producer/AddCrew",
+    route: "/Prod_crew/AddCrew",
   },
 ];

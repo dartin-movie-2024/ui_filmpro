@@ -1,5 +1,7 @@
 
 import { useState } from "react";
+//import { DatePicker, KeyboardDatePicker, KeyboardTimePicker } from "@material-ui/pickers";
+
 import {
   Button,
   Card,
@@ -126,6 +128,10 @@ function AddCrew() {
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedSubDepartment, setSelectedSubDepartment] = useState("");
   const [selectedDesignation, setSelectedDesignation] = useState("");
+  const [selectedDOJ,handleDOJChange ] = useState(new Date());
+  const [selectedDOB, handleDOBChange] = useState(new Date());
+  const [selectedPaymentType, handlePaymentTypeChange] = useState("");
+  const [selectedGender, handleGenderChange] = useState("");
   const EmpDetails=["CrewID","Gender","DOB","Band","Address","Whatsapp","CrewName","Reporting Crew","DOJ","Grade","Contact","E-Mail"];
   const AccDetails=["Name","BankName","Account Number","IFSC Code","PAN Number","Payment Type"]
   const handleDepartmentChange = (e) => {
@@ -229,7 +235,33 @@ function AddCrew() {
                       {EmpDetails.map((emp,index)=>(
                         <tr>
                           <td><Card style={{flex:"1"}}><CardContent>{emp}</CardContent></Card></td>
-                          <td><TextField variant="outlined" fullWidth></TextField></td>
+                          <td>
+                          {emp === "DOB" || emp === "DOJ" ? (
+                            <TextField
+                              variant="outlined"
+                              fullWidth
+                              type="date"
+                              value={selectedDOB}
+                              onChange={handleDOBChange}
+                              InputLabelProps={{
+                                shrink: true,
+                              }}
+                            />
+                          ) : emp === "Gender" ? (
+                            <Select
+                              variant="outlined"
+                              fullWidth
+                              value={selectedGender}
+                              onChange={handleGenderChange}
+                            >
+                              <MenuItem value="male">Male</MenuItem>
+                              <MenuItem value="female">Female</MenuItem>
+                              <MenuItem value="other">Other</MenuItem>
+                            </Select>
+                          ) : (
+                            <TextField variant="outlined" fullWidth />
+                          )}
+                        </td>
                         </tr>
                       ))}
                   </tbody>
@@ -246,10 +278,24 @@ function AddCrew() {
                 <table>
                   <tbody>
                       {AccDetails.map((acc,index)=>(
-                        <tr>
-                          <td><Card style={{flex:"1"}}><CardContent>{acc}</CardContent></Card></td>
-                          <td><TextField variant="outlined" fullWidth></TextField></td>
-                        </tr>
+                      <tr>
+                      <td><Card style={{flex:"1"}}><CardContent>{acc}</CardContent></Card></td>
+                    <td>
+                    {acc === "Payment Type" ? (
+                    <Select
+                      variant="outlined"
+                      fullWidth
+                      value={selectedPaymentType}
+                      onChange={handlePaymentTypeChange}
+                    >
+                      <MenuItem value="cash">Cash</MenuItem>
+                      <MenuItem value="bank">Bank Transfer</MenuItem>
+                    </Select>)
+                     :
+                  ( <TextField variant="outlined" fullWidth />
+                  )}
+                  </td>
+                  </tr>
                       ))}
                   </tbody>
                 </table> 

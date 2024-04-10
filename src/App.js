@@ -71,3 +71,10 @@ function App() {
 }
 
 export default App;
+
+// setup-getSetup
+// CharacterCardList-api/get_character_setup
+// LocationCardList-director/search/getLocations
+// ListData-getSceneSetup(scenesetup page)
+// ListData-getCharacterSetup(Charactersetup page)
+// ListData-getLocationSetup(Locationsetup page)

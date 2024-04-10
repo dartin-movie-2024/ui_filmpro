@@ -1,6 +1,4 @@
-export const serverURL = "http://localhost:7789";
-// export const serverURL = "http://c402-115-98-2-149.ngrok.io";
-
+export const serverURL = "http://127.0.0.1:8001";
 export const PATHS = {
   EDIT_CHARACTERS: "/director/editCharacters",
   CHARACTER_SETUP: "/director/characterSetup",

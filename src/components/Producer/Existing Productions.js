@@ -1,7 +1,9 @@
-import React, {useState } from "react";
+import React, {useState,useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import b from './barbie.jpg';
-import o from './oh1.jpg';
+import {serverURL} from "../../constants"
+import axios from "axios";
+// import b from './barbie.jpg';
+// import o from './oh1.jpg';
 import {
   Button,
   Card,
@@ -71,25 +73,56 @@ const useStyles = makeStyles((theme) => ({
   tile:{
     bordeRradius: "5px 5px",
     width: "200px",
-    height: "200px",
+    height: "300px",
     margin: "10px",
     border: "1px solid #ddd",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    overflow: "hidden",
+    borderRadius:"5px 5px",
   },
   tileimg:{
-    maxWidth: "100%",
-    maxHeight:"100%",
+    width: "100%",
+    height:"100%",
     objectFit: "cover",
   }
 }));
 function ExistingProds(){
     const classes = useStyles();
     const navigate=useNavigate();
+    const [loading, setLoading] = useState(true);
+    const [finaldata,setfinaldata]=useState();
     const handleclick=()=>{
       navigate("/Producer/AddProduction");
     }
+    const handleClickprod_crew=()=>{
+      navigate("/Prod_crew")
+    }
+    useEffect(()=>{
+      let isCancelled = false;
+    if (isCancelled === false) setLoading(true);
+    axios({
+      method: "GET",
+      url: `${serverURL}/api/production_list`,
+      headers: {
+        Authorization: "Bearer " +"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+      },
+    })
+    .then((response) => {
+      const finalresponse=response.data;
+      console.log(finalresponse);
+      setfinaldata(finalresponse.result[0])
+      setLoading(false);
+    })
+    .catch((error) => {
+      console.error('Error fetching production list:', error);
+      setLoading(false);
+    });
+}, []);
+if (loading) {
+  return <div>Loading...</div>;
+}
     return(
         <>
         <div className={classes.containerexist}>
@@ -102,14 +135,14 @@ function ExistingProds(){
         <div className={classes.row}>
         </div>
         <div className={classes.Tile}>
+        <div style={{display:"flex",flexDirection:"column" }}>
             <div className={classes.tile}>
-            <img src={b} alt='tile1'/>
+            {finaldata && <img src={finaldata.Image_path} alt={finaldata.Production_Name} onClick={handleClickprod_crew} style={{cursor:"pointer"}}/>}
             </div>
-            <div className='tile'>
-            <img src={o} alt='tile2'/>
-            </div>
+            {finaldata && <label style={{marginTop:"5px",marginLeft:"20%"}}>{finaldata.Production_Name}</label>}
         </div>
-        <Button variant='contained' color='primary' onClick={handleclick}>Add New Production</Button>
+        </div>
+        <Button variant='contained' color='primary' onClick={handleclick} style={{float:"right",marginBottom:"10px"}}>Add New Production</Button>
         </CardContent>
         </Card>
         </CardContent>

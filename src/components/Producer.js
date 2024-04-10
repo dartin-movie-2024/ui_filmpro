@@ -123,15 +123,15 @@ const getIcon = (icon) => {
   switch (icon) {
     case "PersonIcon":
       return <PersonIcon style={{ color: "#fff" }} />;
-    case "GroupIcon":
-        return <GroupIcon style={{ color: "#fff" }} />;
-    case "AttachMoneyIcon":
-        return <AttachMoneyIcon style={{ color: "#fff" }} />;  
-    case "BarChartIcon":
-      return <BarChartIcon style={{ color: "#fff" }} />;
-      case "AddIcon":
-        return <AddIcon style={{ color: "#fff" }} />;
-      case "AppShortcutIcon":
+    // case "GroupIcon":
+    //     return <GroupIcon style={{ color: "#fff" }} />;
+    // case "AttachMoneyIcon":
+    //     return <AttachMoneyIcon style={{ color: "#fff" }} />;  
+    // case "BarChartIcon":
+    //   return <BarChartIcon style={{ color: "#fff" }} />;
+    //   case "AddIcon":
+    //     return <AddIcon style={{ color: "#fff" }} />;
+    case "AppShortcutIcon":
       return <AppShortcutIcon style={{ color: "#fff" }} />;
     default:
       return null;

@@ -10,7 +10,9 @@ import {
     makeStyles,
   } from "@material-ui/core";
   import TextField from "@material-ui/core/TextField";
-  import { useState } from "react";
+  import { serverURL } from "../../constants";
+  import { useState,useEffect } from "react";
+  import axios from"axios";
   //import "./../../App.css";
 
   const flexColumn = {
@@ -133,20 +135,21 @@ function AddProduction(){
      const [inputValue1, setInputValue1] = useState('');
      const [inputValue2, setInputValue2] = useState('');
      const [showRadioButtons, setShowRadioButtons] = useState(false);
+     const [idcount,setidcount]=useState(1);
 
      const radioOptions = {
-        Option1: 'Option 1',
-        Option2: 'Option 2',
-        Option3: 'Option 3',
-        Option4: 'Option 4',
-        Option5: 'Option 5',
-        Option6: 'Option 6',
-        Option7: 'Option 7',
-        Option8: 'Option 8',
-        Option9: 'Option 9',
-        Option10: 'Option 10',
-        Option11: 'Option 11',
-        Option12: 'Option 12',
+        1: 'Feature Film',
+        2: 'Short Film',
+        3: 'Cocial',
+        4: 'TV Serial',
+        5: 'Documentary',
+        6: 'Corporate Film',
+        7: 'Web Series',
+        8: 'Episode',
+        9: 'News Cast',
+        10: 'Stage Production',
+        11: 'Mini Series',
+        12: 'Clip',
       };
      const handleInputChange1 = (e) => {
        setInputValue1(e.target.value);
@@ -155,9 +158,68 @@ function AddProduction(){
        setShowRadioButtons(true);
      };
      const handleRadioChange = (e) => {
-       setInputValue2(e.target.value);
-     };
+      const selectedOption = e.target.value;
+      const productionId = Object.keys(radioOptions).find(
+        (key) => radioOptions[key] === selectedOption
+      );
+      setInputValue2(selectedOption);
+      setidcount(parseInt(productionId));
+    };
+    
      const classes = useStyles();
+    //  const formData={
+    //   Production_id:idcount,
+    //   Production_Name:inputValue1,
+    //   Production_Type_Id:inputValue2,
+    //   Image_Path:image,
+    //  }
+    //  useEffect(()=>{
+    //   axios({
+    //   method:"POST",
+    //   url: `${serverURL}/api/update_production`,
+    //   data:formData,
+    //   headers: {
+    //     Authorization: "Bearer " +"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+    //   }
+    // })
+    //   .then((response) => {
+    //     console.log("Production updated:", response.data);
+        
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error updating production:', error);}
+    //   )
+    // },[]
+    //  )
+    const handleSubmit = (e) => {
+      e.preventDefault(); // Prevent default form submission
+  
+      // Create FormData object to send file data
+      const formData = new FormData();
+      formData.append("Production_Name", inputValue1);
+      formData.append("Production_Type_Id", inputValue2);
+      formData.append("Image_Path", image);
+      formData.append("Production_id", inputValue2);
+  
+      // Send POST request to the server
+      axios({
+        method: "POST",
+        url: `${serverURL}/api/update_production`,
+        data: formData,
+        headers: {
+          Authorization: "Bearer " +"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+          "Content-Type": "multipart/form-data", // Set content type for FormData
+        },
+      })
+        .then((response) => {
+          console.log("Production updated:", response.data);
+          // Handle the API response as needed
+        })
+        .catch((error) => {
+          console.error("Error updating production:", error);
+        });
+    };
+  
     return(
 
       <>
@@ -183,8 +245,6 @@ function AddProduction(){
                   </CardContent>
                   </Card>
                 </div>
-
-
                     <div className='prod'>
                       <Card>
                         <CardContent>
@@ -210,7 +270,7 @@ function AddProduction(){
                                             </MenuItem>
                                         ))
                                     )}</Select>
-                                    <Button variant='contained' color="primary" type='submit' >SUBMIT</Button>
+                                    <Button variant='contained' color="primary" type='submit' onClick={handleSubmit}>SUBMIT</Button>
                         </div>
                     </CardContent>
                     </Card>

@@ -214,7 +214,7 @@ function Designations()
     {departments[selectedDepartment]["Sub-Departments"].map((subDepartment, index) => (
      <MenuItem key={index} value={subDepartment}>{subDepartment}</MenuItem>
        ))}
-       <MenuItem value="Add New" onClick={() => handleAddNewClick("subDepartment")}>Add New</MenuItem>
+       {/* <MenuItem value="Add New" onClick={() => handleAddNewClick("subDepartment")}>Add New</MenuItem> */}
        <MenuItem value="Add New" onClick={handleAddNewSubDepartmentClick}>
                                   Add New
                                 </MenuItem>

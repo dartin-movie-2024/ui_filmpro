@@ -69,7 +69,7 @@ const ListData = ({
       method: fetchType,
       url: `${serverURL}/${fetchAPI}`,
       headers: {
-        Authorization: "Bearer " + storedData,
+        Authorization: "Bearer " +"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
       },
     })
       .then((result) => {
