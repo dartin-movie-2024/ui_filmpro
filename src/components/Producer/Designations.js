@@ -68,6 +68,10 @@ const useStyles = makeStyles((theme) => ({
     flexGrow:"1",
     justifyContent:"space-around",
     width:"100%",
+    display:"grid",
+    width:"100%",
+    gap:"10px",
+    gridTemplateColumns: "1fr 1fr 1fr",
   },
 }));
 const departments = {
@@ -181,7 +185,7 @@ function Designations()
         <Card>
           <CardContent>
         <div className={classes.row}>
-        <div>
+        <div className={classes.grid1}>
       <Card>
           <CardContent style={{display:"flex",flexDirection:"column"}}>
         <CardHeader title="Department" className={classes.cardHeader}/>
@@ -204,7 +208,7 @@ function Designations()
  </CardContent>
         </Card>
         </div>
-        <div>
+        <div className={classes.grid1}>
         <Card>
       <CardContent style={{display:"flex",flexDirection:"column"}}>
     <CardHeader title="Sub-Department" className={classes.cardHeader}/>
@@ -241,7 +245,7 @@ function Designations()
         </CardContent>
         </Card>
         </div>
-        <div>
+        <div className={classes.grid1}>
  <Card>
 <CardContent style={{display:"flex",flexDirection:"column"}}>
   <CardHeader title="Designation" className={classes.cardHeader}/>

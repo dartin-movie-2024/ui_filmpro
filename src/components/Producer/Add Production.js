@@ -113,14 +113,15 @@ import {
   }));
 function AddProduction(){
     const [image, setImage] = useState(null);
-
+  const [filename,setfilename] =useState(null);
     const handleImageChange = (e) => {
       const file = e.target.files[0];
   
       if (file) {
         if (file.type.match(/^image\//)) {
           const reader = new FileReader();
-  
+          const uploadedfile=file.name;
+          setfilename(uploadedfile)
           reader.onload = (e) => {
             setImage(e.target.result);
           };
@@ -192,28 +193,23 @@ function AddProduction(){
     // },[]
     //  )
     const handleSubmit = (e) => {
-      e.preventDefault(); // Prevent default form submission
-  
-      // Create FormData object to send file data
+      e.preventDefault();
       const formData = new FormData();
-      formData.append("Production_Name", inputValue1);
+      formData.append("Production_name", inputValue1);
       formData.append("Production_Type_Id", inputValue2);
-      formData.append("Image_Path", image);
-      formData.append("Production_id", inputValue2);
+      formData.append("Image_Path", filename);
+      // formData.append("Production_id", inputValue2);
   
-      // Send POST request to the server
       axios({
         method: "POST",
-        url: `${serverURL}/api/update_production`,
-        data: formData,
+        url: `${serverURL}/api/add_production`,
         headers: {
-          Authorization: "Bearer " +"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
-          "Content-Type": "multipart/form-data", // Set content type for FormData
+          Authorization: "Bearer "+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
         },
+        data: formData,
       })
         .then((response) => {
           console.log("Production updated:", response.data);
-          // Handle the API response as needed
         })
         .catch((error) => {
           console.error("Error updating production:", error);

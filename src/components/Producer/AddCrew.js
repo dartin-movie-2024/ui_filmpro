@@ -94,6 +94,22 @@ const useStyles = makeStyles((theme) => ({
     flex:"1",
     width:"100%",
     justifyContent:"space-around",
+    width:"100%",
+    display:"grid",
+    width:"100%",
+    gap:"10px",
+    gridTemplateColumns: "1fr 1fr 1fr",
+  },
+  Row1:{
+    ...flexRow, 
+    flex:"1",
+    width:"100%",
+    justifyContent:"space-around",
+    width:"100%",
+    display:"grid",
+    width:"100%",
+    gap:"10px",
+    gridTemplateColumns: "1fr 1fr",
   },
   cardHeadercrew: {
     height:"3px",
@@ -102,6 +118,10 @@ const useStyles = makeStyles((theme) => ({
   footer:{
     ...flexRow,
     justifyContent:"space-between",
+  },
+  gap1:{
+    ...flexColumn,
+    gap:"10px",
   }
 }));
 
@@ -160,6 +180,7 @@ function AddCrew() {
       <div className={classes.containercrewBody}>
         <Card className={classes.CrewForm}>
           <CardContent>
+            <div className={classes.gap1}>
             <Card>
               <CardContent>
                 <div className={classes.Row} style={{ marginBottom: '1rem' }}>
@@ -225,7 +246,7 @@ function AddCrew() {
             <div>
               <Card>
                 <CardContent>
-              <div className={classes.Row} style={{ marginBottom: '1rem' }}>
+              <div className={classes.Row1} style={{ marginBottom: '1rem' }}>
             <Card style={{flex:"1",maxHeight:"300px",overflowY:"auto",}}>
               <CardContent>
                 <CardHeader title="Employee Master" className={classes.cardHeadercrew}/> 
@@ -309,13 +330,22 @@ function AddCrew() {
             </CardContent>
             </Card>
             </div>
-              <div className={classes.Row} style={{ marginBottom: '1rem' }}>
+              {/* <div className={classes.Row} style={{ marginBottom: '1rem' }}> */}
+              <div >
             <Card style={{flex:"1"}}>
               <CardContent className={classes.footer}>
+              <div className={classes.Row1} style={{ marginBottom: '1rem' }}>
+                <div>
               <Button variant="contained" color="primary">SEARCH DATABASE</Button>
-                <Button variant="contained" color="primary">BULK UPLOAD</Button>
+              </div>
+              <div>
+                <Button variant="contained" color="primary" style={{float:"right"}}>BULK UPLOAD</Button>
+                </div>
+                </div>
                 </CardContent>
                 </Card>
+                </div>
+            {/* </div> */}
             </div>
           </CardContent>
         </Card>

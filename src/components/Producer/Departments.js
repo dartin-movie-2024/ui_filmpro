@@ -1,4 +1,6 @@
-import React, {useState } from "react";
+import React, {useEffect, useState } from "react";
+import { serverURL } from "../../constants";
+import axios from "axios";
 import {
   Button,
   Card,
@@ -8,7 +10,7 @@ import {
   Select,
   makeStyles,
 } from "@material-ui/core";
-import {Box,Typography,Radio,FormControlLabel} from "@mui/material"
+import {Box,Typography,Radio,FormControlLabel,RadioGroup} from "@mui/material"
 import TextField from "@material-ui/core/TextField";
 
 const flexColumn = {
@@ -89,20 +91,15 @@ const useStyles = makeStyles((theme) => ({
   },
   Row:{
     ...flexRow, 
-    justifyContent: "space-around", 
+    justifyContent: "space-between", 
     width:"100%",
     flex:"1",
   },
   Depcard:{
     maxHeight:"150px",
     overflowY:"auto",
-    maxWidth:"400px",
-    overflowX:"auto",
-  },
-  Depcard1:{
-    maxHeight:"200px",
-    overflowY:"auto",
-    maxWidth:"460px",
+    Width:"100%",
+    flex:1,
     overflowX:"auto",
   },
   cardHeader: {
@@ -113,6 +110,22 @@ const useStyles = makeStyles((theme) => ({
   height:"200px",
    textAlign:"center",
   },
+  grid1:{
+    display:"grid",
+    width:"100%",
+    gap:"10px",
+    gridTemplateColumns: "1fr 2fr",
+  },
+  grid2:{
+    display:"grid",
+    width:"100%",
+    gap:"10px",
+    gridTemplateColumns: "2fr 1fr",
+  },
+  gap1:{
+    ...flexColumn,
+    gap:"10px",
+  }
 }));
 function Department(){
         const dir={
@@ -127,6 +140,8 @@ function Department(){
     ]);
     const [depart, setdepart] = useState("");
     const [isNewRowAdded, setIsNewRowAdded] = useState(false);
+    const [membersdep,setmembersdep]=useState(null);
+    const [memberssubdep,setmemberssubdep]=useState(null)
     const HandleDep1Change=()=>{
     const data={
         s_no:dep4_data.length + 1,
@@ -135,6 +150,30 @@ function Department(){
     setdep4_data([...dep4_data,data])
     setdepart("")
     setIsNewRowAdded(true);
+    const formData1={
+      'Production_id':"3",
+    'Department_Name':depart,
+    'Total_Members':membersdep,
+    'Department_Type':selectradio,
+    }
+    
+    axios({
+        method: "POST",
+        url: `${serverURL}/api/create_department`,
+        data:formData1,
+        headers:
+        {
+          "Authorization":"Bearer "+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+          "Content-Type": "multipart/form-data",
+        }
+      }
+    )
+    .then((response) => {
+      console.log("Production updated:", response.data);
+    })
+    .catch((error) => {
+      console.error("Error updating production:", error);
+    });
     }
     const [dep4Data, setDep4Data] = useState([
       { s_no: 1, dep: "loren Ipsum", sub_dep: "loren ipsum" },
@@ -143,6 +182,12 @@ function Department(){
     ]);
     const [dep, setdep] = useState("");
     const [subdep,setsubdep]=useState("");
+    const [selectradio, setselectradio] = useState(""); 
+    const [loading, setLoading] = useState(true);
+
+    const handleRadioButton = (event) => {
+      setselectradio(event.target.value); 
+    };
     const HandleDepchange = () => {
       const newData = {
         s_no: dep4Data.length + 1,
@@ -151,19 +196,48 @@ function Department(){
       };
       setDep4Data([...dep4Data, newData]);
       setdep("");
-    };
+      const formData2={
+        'Production_id':"3",
+        'Department_Id':subdep,
+      'SubDepartment_Name':dep,
+      'Total_Members':memberssubdep,
+      }
+        let isCancelled = false;
+    if (isCancelled === false) setLoading(true);
+      axios({
+          method: "POST",
+          url: `${serverURL}/api/create_subdepartment`,
+          data:formData2,
+          headers:
+          {
+            "Authorization":"Bearer "+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+            "Content-Type": "multipart/form-data",
+          }
+        }
+      )
+      .then((response) => {
+        console.log("Production updated:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error updating production:", error);
+      });
+      
+      if (loading) {
+        return <div>Loading...</div>;
+      }
+    }
     const classes = useStyles();
+    
 return(
     <div className={classes.container}>
     <div className={classes.containerBody}>
       <Card className={classes.DepForm}>
         <CardContent>
-          <Card>
-            <CardContent>
-        <div className={classes.Row}>
+         <div className={classes.gap1}>
+        <div className={classes.grid1}>
           
-          <div className={classes.DirectorCard}>
-            <Card>
+          <div>
+            <Card className={`${classes.assigndeps} ${classes.card}`} style={{ flex: 1 }}>
               <CardContent className={classes.assigndepsContent}>
               <CardHeader title="Panoma Vol2" className={classes.cardHeader}/>
           <Card className={`${classes.assigndeps} ${classes.card}`} style={{ flex: 1 }}>
@@ -177,9 +251,11 @@ return(
         <div className="g2">
             <Card className={`${classes.assigndeps} ${classes.card}`} style={{ flex: 1 }}>
               <CardContent className={classes.assigndepsContent}>
+              <Card className={`${classes.assigndeps} ${classes.card}`} style={{ flex: 1 }}>
+              <CardContent className={classes.assigndepsContent}>
             <div className={classes.dep1}>
                 <div className="b1">
-                <h3>Assistant Directors</h3>
+                <h3 style={{background:"#d8e8ee"}}>Assistant Directors</h3>
                 <ul >
                     {dep_data.map((people,index)=>(
                     <>
@@ -189,7 +265,7 @@ return(
                 </ul>
             </div>
             <div className="b1">
-            <h3>Music Directors</h3>
+            <h3 style={{background:"#d8e8ee"}}>Music Directors</h3>
             <ul >
                     {dep_data.map((people,index)=>(
                     <>
@@ -199,7 +275,7 @@ return(
                 </ul>
             </div>
             <div className="b1">
-            <h3>Costume Department</h3>
+            <h3 style={{background:"#d8e8ee"}}>Costume Department</h3>
             <ul >
                     {dep_data.map((people,index)=>(
                     <>
@@ -211,17 +287,15 @@ return(
             </div>
             </CardContent>
             </Card>
+            </CardContent>
+            </Card>
         </div>
         
       </div>
-      </CardContent>
-      </Card>
       
-          <Card>
-            <CardContent>
-      <div className={classes.Row}>
+      <div className={classes.grid2}>
           <div className="dep3">
-            <Card>
+            <Card className={`${classes.assigndeps} ${classes.card}`} style={{ flex: 1 }}>
               <CardContent>
                 <CardHeader title="Departments" className={classes.cardHeader}/>
             <Card className={`${classes.assigndeps} ${classes.card}`} style={{ flex: 1 }}>
@@ -261,11 +335,23 @@ return(
               <CardContent className={classes.assigndepsContent}>
             <div className={classes.dep3}>
             <TextField label="Name Department" variant="outlined" color="primary" value={depart} onChange={(e)=>{setdepart(e.target.value)}}></TextField>
-            <form className="form">
-            <FormControlLabel label="Main" value="Main" control={<Radio/>}/>
-            <FormControlLabel label="sub" value="sub" control={<Radio/>}/>
+            <form className="form" >
+            <RadioGroup value={selectradio} onChange={handleRadioButton} >
+              <div style={{display:"flex"}}>
+            <FormControlLabel
+              value="Main"
+              control={<Radio />}
+              label="Main"
+            />
+            <FormControlLabel
+              value="Sub"
+              control={<Radio />}
+              label="Sub"
+            />
+            </div>
+          </RadioGroup>
             </form>
-            <TextField label="Total members"></TextField>
+            <TextField label="Total members" onChange={(e)=>{setmembersdep(e.target.value)}}></TextField>
             <Button variant="contained" color="primary" onClick={HandleDep1Change}>ADD</Button>
             </div>
             </CardContent>
@@ -274,15 +360,10 @@ return(
             </Card>
             </div>
        </div>
-       </CardContent>
-       </Card>
-       
-       <Card>
-        <CardContent>
-       <div className={classes.Row}>
+       <div className={classes.grid2}>
         
         <div className="dep4">
-          <Card>
+          <Card className={`${classes.assigndeps} ${classes.card}`} style={{ flex: 1 }}>
             <CardContent>
               <CardHeader title="Sub-Departments" className={classes.cardHeader}/>
           <Card className={`${classes.assigndeps} ${classes.card}`} style={{ flex: 1 }}>
@@ -340,7 +421,7 @@ return(
                 variant="outlined" color="primary"
                 onChange={(e) => setdep(e.target.value)}
               ></TextField>
-              <TextField label="Total members"></TextField>
+              <TextField label="Total members" onChange={(e) => setmemberssubdep(e.target.value)}></TextField>
               <Button
                 variant="contained"
                 color="primary"
@@ -354,8 +435,7 @@ return(
         </div>
        
        </div>
-       </CardContent>
-       </Card>
+       </div>
       </CardContent>
       </Card>
       </div>
