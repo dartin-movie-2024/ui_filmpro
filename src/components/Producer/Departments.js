@@ -156,7 +156,7 @@ function Department(){
     'Total_Members':membersdep,
     'Department_Type':selectradio,
     }
-    
+    console.log(formData1);
     axios({
         method: "POST",
         url: `${serverURL}/api/create_department`,
