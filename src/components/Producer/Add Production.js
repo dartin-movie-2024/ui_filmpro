@@ -192,6 +192,8 @@ function AddProduction(){
     //   )
     // },[]
     //  )
+    console.log("before");
+    
     const handleSubmit = (e) => {
       e.preventDefault();
       const formData = new FormData();
@@ -204,12 +206,14 @@ function AddProduction(){
         method: "POST",
         url: `${serverURL}/api/add_production`,
         headers: {
-          Authorization: "Bearer "+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
         },
         data: formData,
+        body: JSON.stringify(formData)
       })
         .then((response) => {
-          console.log("Production updated:", response.data);
+          const resp=response.data
+          console.log("Production updated:",resp);
         })
         .catch((error) => {
           console.error("Error updating production:", error);

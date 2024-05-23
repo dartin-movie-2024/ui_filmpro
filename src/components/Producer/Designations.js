@@ -94,17 +94,15 @@ const departments = {
 
 function Designations()
 {
-
-    const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedSubDepartment, setSelectedSubDepartment] = useState("");
   const [selectedDesignation, setSelectedDesignation] = useState("");
-  const [showAddNewDepartment, setShowAddNewDepartment] = useState(false); 
+  const [showAddNewDepartment, setShowAddNewDepartment] = useState(false);
   const [newDepartment, setNewDepartment] = useState("");
   const [showAddNewSubDepartment, setShowAddNewSubDepartment] = useState(false);
   const [showAddNewDesignation, setShowAddNewDesignation] = useState(false);
-  const [newSubDepartment, setNewSubDepartment] = useState(""); 
-  const [showAddNew, setShowAddNew] = useState(false); 
-  const [newDesignation, setNewDesignation] = useState(""); 
+  const [newSubDepartment, setNewSubDepartment] = useState("");
+  const [newDesignation, setNewDesignation] = useState("");
   const handleDepartmentChange = (e) => {
     const department = e.target.value;
     setSelectedDepartment(department);
@@ -135,20 +133,21 @@ function Designations()
     setNewDepartment(newDepartmentValue);
   };
   const handleAddNewClick = () => {
-    setShowAddNew(true); 
+    setShowAddNewDesignation(true);
   };
 
   const handleNewDesignationChange = (e) => {
     const newDesignationValue = e.target.value;
     setNewDesignation(newDesignationValue);
+    
   };
 
   const addNewDesignation = () => {
-    departments[selectedDepartment]["Designations"][selectedSubDepartment].push(
-      newDesignation
-    );
-    setNewDesignation("");
-    setShowAddNew(false);
+    if (selectedDepartment && departments[selectedDepartment]) {
+      departments[selectedDepartment]["Designations"][selectedSubDepartment].push(newDesignation);
+    }
+    setNewDesignation(""); 
+  setShowAddNewDesignation(false);
   };
   const handleNewSubDepartmentChange = (e) => {
     const newSubDepartmentValue = e.target.value;
@@ -156,8 +155,8 @@ function Designations()
   };
   const addNewDepartment = () => {
     departments[newDepartment] = {
-      "Sub-Departments": [],
-      "Designations": {},
+      "Sub-Departments": departments[selectedDepartment]["Sub-Departments"],
+      "Designations":departments[selectedDepartment]["Designations"],
     };
     setNewDepartment("");
     setShowAddNewDepartment(false);
@@ -167,9 +166,10 @@ function Designations()
 
     if (selectedDepartment && departments[selectedDepartment]) {
       departments[selectedDepartment]["Sub-Departments"].push(newSubDepartment);
+      departments[selectedDepartment]["Designations"][newSubDepartment] = [];
     }
     setNewSubDepartment("");
-    setShowAddNewSubDepartment(false);
+    setShowAddNewSubDepartment(false); 
   };
 
     const classes = useStyles();
@@ -189,12 +189,14 @@ function Designations()
       <Card>
           <CardContent style={{display:"flex",flexDirection:"column"}}>
         <CardHeader title="Department" className={classes.cardHeader}/>
-    <Select className={classes.Dropdown} value={selectedDepartment} variant="outlined" color="primary" onChange={handleDepartmentChange} >
+    <Select className={classes.Dropdown} 
+    value={selectedDepartment} variant="outlined" color="primary" 
+    onChange={handleDepartmentChange} >
         <em>Select a Department</em>
       {Object.keys(departments).map((department, index) => (
         <MenuItem key={index} value={department}>{department}</MenuItem>
          ))}
-         <MenuItem value="Add New" onClick={handleAddNewDepartmentClick}>
+         <MenuItem value="Add New" onClick={handleAddNewDepartmentClick} style={{color:"blue"}}>
                               Add New
                             </MenuItem>
 
@@ -213,13 +215,15 @@ function Designations()
       <CardContent style={{display:"flex",flexDirection:"column"}}>
     <CardHeader title="Sub-Department" className={classes.cardHeader}/>
     {selectedDepartment && departments[selectedDepartment] &&(
-      <Select className={classes.SubDropdown} value={selectedSubDepartment} variant="outlined" color="primary" onChange={handleSubDepartmentChange}>
+      <Select className={classes.SubDropdown} value={selectedSubDepartment} 
+      variant="outlined" color="primary" 
+      onChange={handleSubDepartmentChange}>
       <em>Select a Sub-Department</em>
     {departments[selectedDepartment]["Sub-Departments"].map((subDepartment, index) => (
      <MenuItem key={index} value={subDepartment}>{subDepartment}</MenuItem>
        ))}
        {/* <MenuItem value="Add New" onClick={() => handleAddNewClick("subDepartment")}>Add New</MenuItem> */}
-       <MenuItem value="Add New" onClick={handleAddNewSubDepartmentClick}>
+       <MenuItem value="Add New" onClick={handleAddNewSubDepartmentClick} style={{color:"blue"}}>
                                   Add New
                                 </MenuItem>
        </Select>
@@ -252,13 +256,15 @@ function Designations()
   {selectedSubDepartment &&
   departments[selectedDepartment]?.["Designations"] &&
  departments[selectedDepartment]["Designations"][selectedSubDepartment] && (
-<Select className={classes.SubDropdown1} value={selectedDesignation}variant="outlined" color="primary" onChange={handleDesignationChange} >
+<Select className={classes.SubDropdown1} value={selectedDesignation}
+variant="outlined" color="primary" 
+onChange={handleDesignationChange} >
   <em>Select a Designation</em>
 {departments[selectedDepartment]["Designations"][selectedSubDepartment].map((designation, index) => (
  <MenuItem key={index} value={designation} >{designation}</MenuItem>
 
         ))}
-        <MenuItem value="Add New" onClick={handleAddNewClick}>Add New</MenuItem>
+        <MenuItem value="Add New" onClick={handleAddNewClick} style={{color:"blue"}}>Add New</MenuItem>
   </Select>
   )}
      {showAddNewDesignation && (
