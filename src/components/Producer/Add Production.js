@@ -193,13 +193,13 @@ function AddProduction(){
     // },[]
     //  )
     console.log("before");
-    
+    // const url_img="https://ibb.co/4Pj4ysv";
     const handleSubmit = (e) => {
       e.preventDefault();
       const formData = new FormData();
-      formData.append("Production_name", inputValue1);
+      formData.append("Production_Name", inputValue1);
       formData.append("Production_Type_Id", inputValue2);
-      formData.append("Image_Path", filename);
+      formData.append("Image_Path",image);
       // formData.append("Production_id", inputValue2);
   
       axios({

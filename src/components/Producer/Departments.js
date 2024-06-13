@@ -128,24 +128,26 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 function Department(){
+  
+  const [depsname_table,setdepsname_table]=useState([]);
         const dir={
             name:"Abcd efg"
         }
         const dep_data=[
           "loren Ipsum","gsdgsdgsdgb","tutukmbncx","qebngjkgm"
       ];
-      const [dep4_data,setdep4_data]=useState([{s_no:1.,dep:"loren Ipsum",},
-      {s_no:2.,dep:"loren Ipsum",},
-      {s_no:3.,dep:"loren Ipsum",}
-    ]);
+      const [dep4_data,setdep4_data]=useState([
+        { s_no: 1, dep: "loren Ipsum",},
+        { s_no: 2, dep: "loren Ipsum",},
+        { s_no: 3, dep: "loren Ipsum" },]);
     const [depart, setdepart] = useState("");
     const [isNewRowAdded, setIsNewRowAdded] = useState(false);
     const [membersdep,setmembersdep]=useState(null);
-    const [memberssubdep,setmemberssubdep]=useState(null)
+    const [memberssubdep,setmemberssubdep]=useState(null);
     const HandleDep1Change=()=>{
     const data={
         s_no:dep4_data.length + 1,
-        dep:depart
+        dep:depart,
     }
     setdep4_data([...dep4_data,data])
     setdepart("")
@@ -184,14 +186,64 @@ function Department(){
     const [subdep,setsubdep]=useState("");
     const [selectradio, setselectradio] = useState(""); 
     const [loading, setLoading] = useState(true);
+    const [final_data,setfinal_data]=useState([]);
+    useEffect(() => {
+      axios({
+        method: "GET",
+        url: `${serverURL}/api/get_department`,
+        headers: {
+          "Authorization": "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+          "Content-Type": "multipart/form-data",
+        }
+      })
+        .then((response) => {
+          setfinal_data(response.data.result);
+          setdepsname_table(response.data.result);
+          const departmentData = response.data.result.map((department, index) => ({
+            s_no: index + 1,
+            dep: department.Department_Name,
+          }));
+          // setDep4Data(departmentData);
+          setdep4_data(departmentData)
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching departments:", error);
+          setLoading(false);
+        });
 
+        axios({
+          method: "GET",
+          url: `${serverURL}/api/get_subdepartment`,
+          headers: {
+            "Authorization": "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+            "Content-Type": "multipart/form-data",
+          }
+        })
+          .then((response) => {
+            setfinal_data(response.data.result);
+            setdepsname_table(response.data.result);
+            const subdepartmentData = response.data.result.map((subdepartment, index) => ({
+              s_no: index + 1,
+              dep: subdepartment.Department_Name,
+              sub_dep: subdepartment.SubDepartment_Name,
+            }));
+            setDep4Data(subdepartmentData);
+            setLoading(false);
+          })
+          .catch((error) => {
+            console.error("Error fetching departments:", error);
+            setLoading(false);
+          });
+    }, []);
+  
     const handleRadioButton = (event) => {
       setselectradio(event.target.value); 
     };
     const HandleDepchange = () => {
       const newData = {
         s_no: dep4Data.length + 1,
-        dep: dep,
+        dep: depart,
         sub_dep: subdep,
       };
       setDep4Data([...dep4Data, newData]);
@@ -226,6 +278,7 @@ function Department(){
         return <div>Loading...</div>;
       }
     }
+
     const classes = useStyles();
     
 return(
@@ -408,12 +461,18 @@ return(
           <Card className={`${classes.assigndeps} ${classes.card}`} style={{ flex: 1 }}>
             <CardContent className={classes.assigndepsContent}>
             <div className={classes.dep3}>
-              <Select label="Select sub-Department" value={subdep} onChange={(e)=>{setsubdep(e.target.value)}}>
+              <Select label="Select sub-Department" value={subdep}
+                onChange={(e) => setsubdep(e.target.value)}>
                 <MenuItem disabled value="">
                   <em>Select Department</em>
                 </MenuItem>
-                <MenuItem value="option1">Option 1</MenuItem>
-                <MenuItem value="option2">Option 2</MenuItem>
+                {
+                final_data.map((depItem)=>(
+                  <MenuItem key={depItem.Department_Id} value={depItem.Department_Id}>
+                    {depItem.Department_Id}.{depItem.Department_Name}
+                    </MenuItem>
+                ))
+                }
               </Select>
               <TextField
                 label="Name sub-Department"
