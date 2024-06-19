@@ -144,6 +144,7 @@ function Department(){
     const [isNewRowAdded, setIsNewRowAdded] = useState(false);
     const [membersdep,setmembersdep]=useState(null);
     const [memberssubdep,setmemberssubdep]=useState(null);
+    const [productionId, setProductionId] = useState(null);
     const HandleDep1Change=()=>{
     const data={
         s_no:dep4_data.length + 1,
@@ -203,7 +204,7 @@ function Department(){
             s_no: index + 1,
             dep: department.Department_Name,
           }));
-          // setDep4Data(departmentData);
+          setDep4Data(departmentData);
           setdep4_data(departmentData)
           setLoading(false);
         })
@@ -225,7 +226,7 @@ function Department(){
             setdepsname_table(response.data.result);
             const subdepartmentData = response.data.result.map((subdepartment, index) => ({
               s_no: index + 1,
-              dep: subdepartment.Department_Name,
+              dep: "",
               sub_dep: subdepartment.SubDepartment_Name,
             }));
             setDep4Data(subdepartmentData);

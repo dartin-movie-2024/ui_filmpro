@@ -1,7 +1,9 @@
 
 import { useState } from "react";
 //import { DatePicker, KeyboardDatePicker, KeyboardTimePicker } from "@material-ui/pickers";
-
+import { serverURL } from "../../constants";
+import React, { useEffect} from "react";
+import axios from "axios";
 import {
   Button,
   Card,
@@ -10,6 +12,7 @@ import {
   Grid,
   MenuItem,
   InputLabel,
+  Paper,
   Select,
   TextField,
   makeStyles,
@@ -76,6 +79,16 @@ const useStyles = makeStyles((theme) => ({
     margin: ".5rem 0",
     flex:"1",
   },
+  DeignForm: {
+    ...flexColumn,
+    ...borderBox,
+    width: "90%",
+    height: "100%",
+    padding: "1rem",
+    overflow: "auto",
+    backgroundColor: "#d8e8ee",
+    flex: "1",
+  },
   CrewForm: {
     ...flexColumn,
     ...borderBox,
@@ -85,9 +98,22 @@ const useStyles = makeStyles((theme) => ({
     overflow: "auto",
     backgroundColor: "#d8e8ee",
   },
+  cardHeader: {
+    height: "3px",
+    background: "#d8e8ee",
+  },
   textArea: {
     flex: 1,
     margin: "0 1rem",
+  },
+  row: {
+    ...flexRow,
+    flexGrow: "1",
+    justifyContent: "space-around",
+    width: "100%",
+    display: "grid",
+    gap: "10px",
+    gridTemplateColumns: "1fr 1fr 1fr",
   },
   Row:{
     ...flexRow, 
@@ -125,23 +151,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const departments = {
-  "Direction": {
-    "Sub-Departments": ["Direction Team", "Location"],
-    "Designations": {
-      "Direction Team": ["First AD", "Second AD"],
-      "Location":["dsd","ddcc"]
-    },
-  },
-
-  "Camera & Lighting": {
-    "Sub-Departments": ["Photography", "Lighting"],
-    "Designations": {
-      "Photography": ["DOP", "camera operator", "camera assistant", "sec cam assistant", "steadicam operator", "Focus Puller"],
-      "Lighting":["rwrr","fqws"]
-    },
-  },
-};
 
 function AddCrew() {
   const classes = useStyles();
@@ -171,6 +180,84 @@ function AddCrew() {
     const designation = e.target.value;
     setSelectedDesignation(designation);
   };
+  
+  const [loading, setLoading] = useState(true);
+  const [departments, setDepartments] = useState([]);
+  const [subDepartments, setSubDepartments] = useState([]);
+  const [designations, setDesignations] = useState([]);
+
+
+  useEffect(() => {
+    axios({
+      method: "GET",
+      url: `${serverURL}/api/get_department`,
+      headers: {
+        Authorization:
+          "Bearer " +
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+        "Content-Type": "multipart/form-data",
+      },
+    })
+      .then((response) => {
+        const departmentData = response.data.result.map((department) => ({
+          dep: department.Department_Name,
+        }));
+        setDepartments(departmentData);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching departments:", error);
+        setLoading(false);
+      });
+
+    axios({
+      method: "GET",
+      url: `${serverURL}/api/get_subdepartment`,
+      headers: {
+        Authorization:
+          "Bearer " +
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+        "Content-Type": "multipart/form-data",
+      },
+    })
+      .then((response) => {
+        const subdepartmentData = response.data.result.map((subdepartment) => ({
+          subdep: subdepartment.SubDepartment_Name,
+          dep: subdepartment.Department_Name, 
+        }));
+        setSubDepartments(subdepartmentData);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching sub-departments:", error);
+        setLoading(false);
+      });
+
+    axios({
+      method: "GET",
+      url: `${serverURL}/api/get_designations`,
+      headers: {
+        Authorization:
+          "Bearer " +
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+        "Content-Type": "multipart/form-data",
+      },
+    })
+      .then((response) => {
+        const designationData = response.data.result.map((designation) => ({
+          des: designation.Designation_Name,
+          subdep: designation.SubDepartment_Name, 
+        }));
+        setDesignations(designationData);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching designations:", error);
+        setLoading(false);
+      });
+  }, []);
+
+
   const saveemployee=(e)=>{
     
   }
@@ -181,67 +268,91 @@ function AddCrew() {
         <Card className={classes.CrewForm}>
           <CardContent>
             <div className={classes.gap1}>
-            <Card>
-              <CardContent>
-                <div className={classes.Row} style={{ marginBottom: '1rem' }}>
-                  <div>
-                    <Card style={{flex:"1"}}>
-                      <CardContent>
-                        <CardHeader title="Departments" className={classes.cardHeadercrew} />
-                        <Card className={`${classes.assigncrew} ${classes.card}`} style={{ flex:"1"}}>
-                          <CardContent className={classes.assigncrewContent}>
-                            <Select className={classes.Dropdown} value={selectedDepartment} onChange={handleDepartmentChange}>
-                              <em>Select a Department</em>
-                              {Object.keys(departments).map((department, index) => (
-                                <MenuItem key={index} value={department}>{department}</MenuItem>
-                              ))}
+            
+              <Card>
+                <CardContent>
+                  <div className={classes.row}>
+                    <div className={classes.grid1}>
+                      <Card>
+                        <CardContent style={{ display: "flex", flexDirection: "column" }}>
+                          <CardHeader title="Department" className={classes.cardHeader} />
+                          <Select
+                            className={classes.Dropdown}
+                            value={selectedDepartment}
+                            variant="outlined"
+                            color="primary"
+                            onChange={handleDepartmentChange}
+                          >
+                            <em>Select a Department</em>
+                            {departments.map((department, index) => (
+                              <MenuItem key={index} value={department.dep}>
+                                {department.dep}
+                              </MenuItem>
+                            ))}
+                          
+                          </Select>
+                          
+                        </CardContent>
+                      </Card>
+                    </div>
+                    <div className={classes.grid1}>
+                      <Card>
+                        <CardContent style={{ display: "flex", flexDirection: "column" }}>
+                          <CardHeader title="Sub-Department" className={classes.cardHeader} />
+                          {selectedDepartment && (
+                            <Select
+                              className={classes.SubDropdown}
+                              value={selectedSubDepartment}
+                              variant="outlined"
+                              color="primary"
+                              onChange={handleSubDepartmentChange}
+                            >
+                              <em>Select a Sub-Department</em>
+                              {subDepartments
+                                // .filter((subdep) => subdep.dep === selectedDepartment)
+                                .map((subDepartment, index) => (
+                                  <MenuItem key={index} value={subDepartment.subdep}>
+                                    {subDepartment.subdep}
+                                  </MenuItem>
+                                ))}
+                              
                             </Select>
-                          </CardContent>
-                        </Card>
-                      </CardContent>
-                    </Card>
-                  </div>
-                  <div>
-                    {selectedDepartment && (
-                      <Card style={{flex:"1"}}>
-                        <CardContent>
-                          <CardHeader title="Sub-Departments" className={classes.cardHeadercrew} />
-                          <Card className={`${classes.assigncrew} ${classes.card}`} style={{ flex:"1"}}>
-                            <CardContent className={classes.assigncrewContent}>
-                              <Select className={classes.SubDropdown} value={selectedSubDepartment} onChange={handleSubDepartmentChange}>
-                                <em>Select a Sub-Department</em>
-                                {departments[selectedDepartment]["Sub-Departments"].map((subDepartment, index) => (
-                                  <MenuItem key={index} value={subDepartment}>{subDepartment}</MenuItem>
-                                ))}
-                              </Select>
-                            </CardContent>
-                          </Card>
+                          )}
+                          
                         </CardContent>
                       </Card>
-                    )}
-                  </div>
-                  <div>
-                    {selectedSubDepartment && (
-                      <Card style={{flex:"1"}}>
-                        <CardContent>
-                          <CardHeader title="Designations" className={classes.cardHeadercrew} />
-                          <Card className={`${classes.assigncrew} ${classes.card}`} style={{ flex:"1"}}>
-                            <CardContent className={classes.assigncrewContent}>
-                              <Select className={classes.SubDropdown1} value={selectedDesignation} onChange={handleDesignationChange}>
-                                <em>Select a Designation</em>
-                                {departments[selectedDepartment]["Designations"][selectedSubDepartment].map((designation, index) => (
-                                  <MenuItem key={index} value={designation}>{designation}</MenuItem>
+                    </div>
+                    <div className={classes.grid1}>
+                      <Card>
+                        <CardContent style={{ display: "flex", flexDirection: "column" }}>
+                          <CardHeader title="Designation" className={classes.cardHeader} />
+                          {selectedSubDepartment && (
+                            <Select
+                              className={classes.SubDropdown1}
+                              value={selectedDesignation}
+                              variant="outlined"
+                              color="primary"
+                              onChange={handleDesignationChange}
+                            >
+                              <em>Select a Designation</em>
+                              {designations
+                                // .filter((desig) => desig.subdep === selectedSubDepartment)
+                                .map((designation, index) => (
+                                  <MenuItem key={index} value={designation.des}>
+                                    {designation.des}
+                                  </MenuItem>
                                 ))}
-                              </Select>
-                            </CardContent>
-                          </Card>
+                              
+                            </Select>
+                          )}
+                          
                         </CardContent>
                       </Card>
-                    )}
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            
 
             <div>
               <Card>
