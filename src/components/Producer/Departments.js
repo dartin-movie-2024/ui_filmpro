@@ -57,12 +57,13 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     height: "100%",
     backgroundColor: "white",
+    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)"
   },
   assigndepsContent: {
     ...flexColumn,
     padding: "0 .5rem",
     height: "100%",
-    overflow: "hidden",
+    overflow: "hidden"
   },
   card: {
     ...borderBox,
@@ -77,8 +78,8 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     padding: "1rem",
     overflow: "auto",
-    backgroundColor: "#d8e8ee",
     flex: "1",
+
   },
   dep3: {
     ...flexColumn,
@@ -127,8 +128,8 @@ const useStyles = makeStyles((theme) => ({
     gap: "10px",
   }
 }));
-function Department() {
 
+function Department() {
   const [depsname_table, setdepsname_table] = useState([]);
   const dir = {
     name: "Abcd efg"
@@ -145,7 +146,8 @@ function Department() {
   const [membersdep, setmembersdep] = useState(null);
   const [memberssubdep, setmemberssubdep] = useState(null);
   const [productionId, setProductionId] = useState(null);
-  const HandleDep1Change = () => {
+
+  const SaveDepartment = () => {
     const data = {
       s_no: dep4_data.length + 1,
       dep: depart,
@@ -159,89 +161,87 @@ function Department() {
       'Total_Members': membersdep,
       'Department_Type': selectradio,
     }
-    console.log(formData1);
-    axios({
-      method: "POST",
-      url: `${serverURL}/api/create_department`,
-      data: formData1,
-      headers:
-      {
-        "Authorization": "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
-        "Content-Type": "multipart/form-data",
+
+    async function createDepartment() {
+      try {
+        const response = await axios.post(`${serverURL}/api/create_department`, formData1, {
+          headers: {
+            "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log("Production updated:", response.data);
+      } catch (error) {
+        console.error("Error updating production:", error);
       }
     }
-    )
-      .then((response) => {
-        console.log("Production updated:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error updating production:", error);
-      });
+
+    createDepartment();
   }
+
   const [dep4Data, setDep4Data] = useState([
     { s_no: 1, dep: "loren Ipsum", sub_dep: "loren ipsum" },
     { s_no: 2, dep: "loren Ipsum", sub_dep: "loren ipsum" },
     { s_no: 3, dep: "loren Ipsum", sub_dep: "loren ipsum" },
   ]);
+
   const [dep, setdep] = useState("");
   const [subdep, setsubdep] = useState("");
   const [selectradio, setselectradio] = useState("");
   const [loading, setLoading] = useState(true);
   const [final_data, setfinal_data] = useState([]);
+
   useEffect(() => {
-    axios({
-      method: "GET",
-      url: `${serverURL}/api/get_department`,
-      headers: {
-        "Authorization": "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
-        "Content-Type": "multipart/form-data",
-      }
-    })
-      .then((response) => {
-        setfinal_data(response.data.result);
-        setdepsname_table(response.data.result);
-        const departmentData = response.data.result.map((department, index) => ({
+    const fetchData = async () => {
+      try {
+        const departmentResponse = await axios.get(`${serverURL}/api/get_department`, {
+          headers: {
+            "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+          },
+        });
+        setfinal_data(departmentResponse.data.result);
+        setdepsname_table(departmentResponse.data.result);
+        const departmentData = departmentResponse.data.result.map((department, index) => ({
           s_no: index + 1,
           dep: department.Department_Name,
         }));
         setDep4Data(departmentData);
-        setdep4_data(departmentData)
+        setdep4_data(departmentData);
         setLoading(false);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching departments:", error);
         setLoading(false);
-      });
-
-    axios({
-      method: "GET",
-      url: `${serverURL}/api/get_subdepartment`,
-      headers: {
-        "Authorization": "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
-        "Content-Type": "multipart/form-data",
       }
-    })
-      .then((response) => {
-        setfinal_data(response.data.result);
-        setdepsname_table(response.data.result);
-        const subdepartmentData = response.data.result.map((subdepartment, index) => ({
+
+      try {
+        const subdepartmentResponse = await axios.get(`${serverURL}/api/get_subdepartment`, {
+          headers: {
+            "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+          },
+        });
+        setfinal_data(subdepartmentResponse.data.result);
+        setdepsname_table(subdepartmentResponse.data.result);
+        const subdepartmentData = subdepartmentResponse.data.result.map((subdepartment, index) => ({
           s_no: index + 1,
-          dep: "",
+          dep: subdepartment.Department_Name,
           sub_dep: subdepartment.SubDepartment_Name,
         }));
         setDep4Data(subdepartmentData);
         setLoading(false);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching departments:", error);
         setLoading(false);
-      });
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleRadioButton = (event) => {
     setselectradio(event.target.value);
   };
-  const HandleDepchange = () => {
+
+  const SaveSubDepartment = () => {
     const newData = {
       s_no: dep4Data.length + 1,
       dep: depart,
@@ -257,23 +257,22 @@ function Department() {
     }
     let isCancelled = false;
     if (isCancelled === false) setLoading(true);
-    axios({
-      method: "POST",
-      url: `${serverURL}/api/create_subdepartment`,
-      data: formData2,
-      headers:
-      {
-        "Authorization": "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
-        "Content-Type": "multipart/form-data",
+
+    async function createSubDepartment() {
+      try {
+        const response = await axios.post(`${serverURL}/api/create_subdepartment`, formData2, {
+          headers: {
+            "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log("Production updated:", response.data);
+      } catch (error) {
+        console.error("Error updating production:", error);
       }
     }
-    )
-      .then((response) => {
-        console.log("Production updated:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error updating production:", error);
-      });
+
+    createSubDepartment();
 
     if (loading) {
       return <div>Loading...</div>;
@@ -309,7 +308,7 @@ function Department() {
                         <CardContent className={classes.assigndepsContent}>
                           <div className={classes.dep1}>
                             <div className="b1">
-                              <h3 style={{ background: "#d8e8ee" }}>Assistant Directors</h3>
+                              <h3>Assistant Directors</h3>
                               <ul >
                                 {dep_data.map((people, index) => (
                                   <>
@@ -319,7 +318,7 @@ function Department() {
                               </ul>
                             </div>
                             <div className="b1">
-                              <h3 style={{ background: "#d8e8ee" }}>Music Directors</h3>
+                              <h3>Music Directors</h3>
                               <ul >
                                 {dep_data.map((people, index) => (
                                   <>
@@ -329,7 +328,7 @@ function Department() {
                               </ul>
                             </div>
                             <div className="b1">
-                              <h3 style={{ background: "#d8e8ee" }}>Costume Department</h3>
+                              <h3>Costume Department</h3>
                               <ul >
                                 {dep_data.map((people, index) => (
                                   <>
@@ -406,7 +405,7 @@ function Department() {
                               </RadioGroup>
                             </form>
                             <TextField label="Total members" onChange={(e) => { setmembersdep(e.target.value) }}></TextField>
-                            <Button variant="contained" color="primary" onClick={HandleDep1Change}>ADD</Button>
+                            <Button variant="contained" color="primary" onClick={SaveDepartment}>ADD</Button>
                           </div>
                         </CardContent>
                       </Card>
@@ -485,7 +484,7 @@ function Department() {
                             <Button
                               variant="contained"
                               color="primary"
-                              onClick={HandleDepchange}
+                              onClick={SaveSubDepartment}
                             >Add</Button>
                           </div>
                         </CardContent>
