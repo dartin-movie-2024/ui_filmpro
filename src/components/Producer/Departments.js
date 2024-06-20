@@ -130,7 +130,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Department() {
-  const [depsname_table, setdepsname_table] = useState([]);
   const dir = {
     name: "Abcd efg"
   }
@@ -189,7 +188,9 @@ function Department() {
   const [subdep, setsubdep] = useState("");
   const [selectradio, setselectradio] = useState("");
   const [loading, setLoading] = useState(true);
-  const [final_data, setfinal_data] = useState([]);
+  const [dep_details, setdep_details] = useState([]);
+  const [sub_dep_details, setsub_dep_details] = useState([]);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -199,8 +200,7 @@ function Department() {
             "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
           },
         });
-        setfinal_data(departmentResponse.data.result);
-        setdepsname_table(departmentResponse.data.result);
+        setdep_details(departmentResponse.data.result);
         const departmentData = departmentResponse.data.result.map((department, index) => ({
           s_no: index + 1,
           dep: department.Department_Name,
@@ -219,8 +219,7 @@ function Department() {
             "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
           },
         });
-        setfinal_data(subdepartmentResponse.data.result);
-        setdepsname_table(subdepartmentResponse.data.result);
+        setsub_dep_details(subdepartmentResponse.data.result);
         const subdepartmentData = subdepartmentResponse.data.result.map((subdepartment, index) => ({
           s_no: index + 1,
           dep: subdepartment.Department_Name,
@@ -461,21 +460,21 @@ function Department() {
                       <Card className={`${classes.assigndeps} ${classes.card}`} style={{ flex: 1 }}>
                         <CardContent className={classes.assigndepsContent}>
                           <div className={classes.dep3}>
-                            <Select label="Select sub-Department" value={subdep}
+                            <Select label="Select Department" value={subdep}
                               onChange={(e) => setsubdep(e.target.value)}>
                               <MenuItem disabled value="">
                                 <em>Select Department</em>
                               </MenuItem>
                               {
-                                final_data.map((depItem) => (
+                                dep_details.map((depItem) => (
                                   <MenuItem key={depItem.Department_Id} value={depItem.Department_Id}>
-                                    {depItem.Department_Id}.{depItem.Department_Name}
+                                    {depItem.Department_Name}
                                   </MenuItem>
                                 ))
                               }
                             </Select>
                             <TextField
-                              label="Name sub-Department"
+                              label="Name Sub-Department"
                               value={dep}
                               variant="outlined" color="primary"
                               onChange={(e) => setdep(e.target.value)}
