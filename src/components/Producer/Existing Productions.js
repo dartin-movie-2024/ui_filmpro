@@ -44,43 +44,42 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     justifyContent: "space-around",
   },
-  card: {
-    ...borderBox,
-    width: "100%",
-    margin: ".5rem 0",
-  },
   existForm: {
     ...flexColumn,
     ...borderBox,
     width: "90%",
     height: "100%",
     padding: "1rem",
-    overflow: "auto",
-    backgroundColor: "#d8e8ee",
+    overflow: "hidden",
     flex: "1",
   },
   row: {
     ...flexRow,
     justifyContent: "space-around",
   },
+  card: {
+    ...borderBox,
+    width: "100%",
+    margin: ".5rem 0",
+    border: "1px solid green",
+  },
   Tile: {
     display: "flex",
     flexWrap: "wrap",
-    marginLeft: "30%",
-    gap: "40px",
-    rowGap: "30px",
+    justifyContent: "space-around", // evenly distribute items along the row
+    gap: "20px",
+    maxHeight: "300px",
+    overflow: "auto"
   },
   tile: {
-    bordeRradius: "5px 5px",
-    width: "200px",
-    height: "300px",
-    margin: "10px",
-    border: "1px solid #ddd",
+    borderRadius: "5px",
+    width: "150px", // for 4 items per row, adjust as needed
+    height: "200px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
-    borderRadius: "5px 5px",
+    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
   },
   tileimg: {
     width: "100%",
@@ -88,38 +87,39 @@ const useStyles = makeStyles((theme) => ({
     objectFit: "cover",
   }
 }));
+
 function ExistingProds() {
   const classes = useStyles();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [finaldata, setfinaldata] = useState();
+  const [error, setError] = useState(null);
+
   const handleclick = () => {
     navigate("/Producer/AddProduction");
   }
+
   const handleClickprod_crew = () => {
     navigate("/Prod_crew")
   }
 
   useEffect(() => {
-    let isCancelled = false;
-    if (isCancelled === false) setLoading(true);
-    axios({
-      method: "GET",
-      url: `${serverURL}/api/production_list`,
-      headers: {
-        Authorization: "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${serverURL}/api/production_list`, {
+          headers: {
+            Authorization: `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+          },
+        });
+        setfinaldata(response.data.result);
+      } catch (error) {
+        setError('Error fetching production list');
+      } finally {
+        setLoading(false);
       }
-    })
-      .then((response) => {
-        const finalresponse = response.data;
-        console.log(finalresponse);
-        setfinaldata(finalresponse.result[0])
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching production list:', error);
-        setLoading(false);
-      });
+    };
+
+    fetchData();
   }, []);
 
   if (loading) {
@@ -131,20 +131,22 @@ function ExistingProds() {
         <div className={classes.containerBodyexist}>
           <Card className={classes.existForm}>
             <CardContent>
-              <Paper style={{ width: "100%", textAlign: "center" }}><h2>Exsisting Productions</h2></Paper>
+              <Paper style={{ width: "100%", textAlign: "center" }}><h3>Existing Productions</h3></Paper>
               <Card>
                 <CardContent>
                   <div className={classes.row}>
                   </div>
                   <div className={classes.Tile}>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                      <div className={classes.tile}>
-                        {finaldata && <img src={finaldata.Image_path} alt={finaldata.Production_Name} onClick={handleClickprod_crew} style={{ cursor: "pointer" }} />}
+                    {finaldata && finaldata.map((data, index) => (
+                      <div style={{ display: "flex", flexDirection: "column" }} key={index}>
+                        <div className={classes.tile}>
+                          <img src={data.Image_path} alt={data.Production_Name} onClick={handleClickprod_crew} style={{ cursor: "pointer" }} />
+                        </div>
+                        <label style={{ textAlign: "center", fontSize: 14 }}>{data.Production_Name}</label>
                       </div>
-                      {finaldata && <label style={{ marginTop: "5px", marginLeft: "20%" }}>{finaldata.Production_Name}</label>}
-                    </div>
+                    ))}
                   </div>
-                  <Button variant='contained' color='primary' onClick={handleclick} style={{ float: "right", marginBottom: "10px" }}>Add New Production</Button>
+                  <Button variant='contained' color='primary' onClick={handleclick} style={{ float: "right" }}>Add New Production</Button>
                 </CardContent>
               </Card>
             </CardContent>
