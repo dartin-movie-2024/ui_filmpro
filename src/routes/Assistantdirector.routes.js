@@ -25,9 +25,9 @@ export const AssistantdirectorRoutes = () => (
         <ListDataAD
           editButtonConfig="verifyCrew"
           headerText="Crew Details"
-          fetchAPI="crew"
+          fetchAPI="/api/get_crew"
           fetchType="GET"
-          searchByField="name"
+          searchByField="Crew_Name"
         />
       }
     />
