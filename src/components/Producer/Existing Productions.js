@@ -98,13 +98,15 @@ function ExistingProds() {
   const [loading, setLoading] = useState(true);
   const [finaldata, setfinaldata] = useState();
   const [error, setError] = useState(null);
+  const [selectedProdId, setSelectedProdId] = useState(null);
 
   const handleclick = () => {
     navigate("/Producer/AddProduction");
   }
 
-  const handleClickprod_crew = () => {
-    navigate("/Prod_crew")
+  const handleClickProdCrew = (prodId) => {
+    setSelectedProdId(prodId);
+    navigate(`/Prod_crew/Departments?id=${prodId}`)
   }
 
   useEffect(() => {
@@ -141,14 +143,19 @@ function ExistingProds() {
                   <div className={classes.row}>
                   </div>
                   <div className={classes.Tile}>
-                    {finaldata && finaldata.map((data, index) => (
-                      <div style={{ display: "flex", flexDirection: "column" }} key={index}>
-                        <div className={classes.tile}>
-                          <img src={data.Image_path} alt={data.Production_Name} onClick={handleClickprod_crew} style={{ cursor: "pointer" }} />
-                        </div>
-                        <label style={{ textAlign: "center", fontSize: 14 }}>{data.Production_Name}</label>
+                  {finaldata.map((prod) => (
+                    <div key={prod.Production_id} style={{ display: "flex", flexDirection: "column" }}>
+                      <div className={classes.tile}>
+                        <img
+                          src={prod.Image_Path}
+                          alt={prod.Production_Name}
+                          onClick={() => handleClickProdCrew(prod.Production_id)}
+                          style={{ cursor: "pointer" }}
+                        />
                       </div>
-                    ))}
+                      <label style={{ marginTop: "5px", marginLeft: "20%" }}>{prod.Production_Name}</label>
+                    </div>
+                  ))}
                   </div>
                 </CardContent>
               </Card>
