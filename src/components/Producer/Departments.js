@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import {Box,Typography,Radio,FormControlLabel,RadioGroup} from "@mui/material"
 import TextField from "@material-ui/core/TextField";
-
+import { useLocation, useNavigate } from 'react-router-dom';
 const flexColumn = {
   display: "flex",
   flexDirection: "column",
@@ -128,7 +128,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 function Department(){
-  
+  // const location = useLocation();
+  // const navigate = useNavigate();
+  // const queryParams = new URLSearchParams(location.search);
+  // const prod_id = queryParams.get('id');
   const [depsname_table,setdepsname_table]=useState([]);
         const dir={
             name:"Abcd efg"
