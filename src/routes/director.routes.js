@@ -30,7 +30,7 @@ export const directorRoutes = () => (
           headerText="Crew Details"
           fetchAPI="/api/get_crew"
           fetchType="GET"
-          searchByField="name"
+          searchByField="Crew_Name"
         />
       }
     />

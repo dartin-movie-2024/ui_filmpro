@@ -117,12 +117,15 @@ const ListData = ({
 
 
   const handleSearchChange = (event) => {
-    const searchQuery = event.target.value;
+    const searchQuery = event.target.value.trim();
+    console.log("Search by field:", searchByField); // Log the searchByField value
 
-    const filteredRowsData = !!searchQuery
-      ? rows.filter((row) =>
-        row[searchByField].toLowerCase().includes(searchQuery.toLowerCase())
-      )
+    const filteredRowsData = searchQuery
+      ? rows.filter((row) => {
+        console.log("Row data:", row); // Log the entire row
+        console.log("Data for field [" + searchByField + "]:", row[searchByField]); // Log the specific field value
+        return row[searchByField] !== undefined && row[searchByField].toString().toLowerCase().includes(searchQuery.toLowerCase());
+      })
       : rows;
     setFilteredRows(filteredRowsData);
   };
@@ -140,7 +143,7 @@ const ListData = ({
         <TextField
           className={classes.searchInput}
           id="input-with-icon-textfield"
-          placeholder="Search Crew..."
+          placeholder="Search Crew by Name..."
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
