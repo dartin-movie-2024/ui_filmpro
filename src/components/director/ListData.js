@@ -63,8 +63,8 @@ const ListData = ({
   useEffect(() => {
     let isCancelled = false;
     if (!isCancelled) setLoading(true);
-    const storedData = localStorage.getItem("myData");
-    console.log("Stored Data:", storedData);
+    // const storedData = localStorage.getItem("myData");
+    // console.log("Stored Data:", storedData);
     axios({
       method: fetchType,
       url: `${serverURL}/${fetchAPI}`,
@@ -89,7 +89,16 @@ const ListData = ({
             .map(key => ({
               field: key,
               headerName: key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+              width: 200,
             })) : [];
+
+          if (columns.length > 0) {
+            // Assuming you want to set a specific width for a column named 'Name'
+            const nameColumnIndex = columns.findIndex(column => column.field === 'id');
+            if (nameColumnIndex !== -1) {
+              columns[nameColumnIndex].width = 100; // Set specific width for 'Name' column
+            }
+          }
 
           const editButtonColumn = getListEditButton(rows)[editButtonConfig];
           if (editButtonColumn) {
