@@ -72,14 +72,16 @@ const useStyles = makeStyles((theme) => ({
     overflow: "auto"
   },
   tile: {
-    borderRadius: "5px",
-    width: "150px", // for 4 items per row, adjust as needed
-    height: "200px",
+    bordeRradius: "5px 5px",
+    width: "200px",
+    height: "300px",
+    margin: "10px",
+    border: "1px solid #ddd",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
-    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+    borderRadius: "5px 5px",
   },
   tileimg: {
     width: "100%",
@@ -94,13 +96,15 @@ function ExistingProds() {
   const [loading, setLoading] = useState(true);
   const [finaldata, setfinaldata] = useState();
   const [error, setError] = useState(null);
+  const [selectedProdId, setSelectedProdId] = useState(null);
 
   const handleclick = () => {
     navigate("/Producer/AddProduction");
   }
 
-  const handleClickprod_crew = () => {
-    navigate("/Prod_crew")
+  const handleClickProdCrew = (prodId) => {
+    setSelectedProdId(prodId);
+    navigate(`/Prod_crew/Departments?id=${prodId}`)
   }
 
   useEffect(() => {
@@ -127,32 +131,37 @@ function ExistingProds() {
   }
   return (
     <>
+      <Paper style={{ width: "100%", textAlign: "center" }}><h3>Existing Productions</h3></Paper>
       <div className={classes.containerexist}>
         <div className={classes.containerBodyexist}>
           <Card className={classes.existForm}>
             <CardContent>
-              <Paper style={{ width: "100%", textAlign: "center" }}><h3>Existing Productions</h3></Paper>
               <Card>
                 <CardContent>
                   <div className={classes.row}>
                   </div>
                   <div className={classes.Tile}>
-                    {finaldata && finaldata.map((data, index) => (
-                      <div style={{ display: "flex", flexDirection: "column" }} key={index}>
+                    {finaldata.map((prod) => (
+                      <div key={prod.Production_id} style={{ display: "flex", flexDirection: "column" }}>
                         <div className={classes.tile}>
-                          <img src={data.Image_path} alt={data.Production_Name} onClick={handleClickprod_crew} style={{ cursor: "pointer" }} />
+                          <img
+                            src={prod.Image_Path}
+                            alt={prod.Production_Name}
+                            onClick={() => handleClickProdCrew(prod.Production_id)}
+                            style={{ cursor: "pointer" }}
+                          />
                         </div>
-                        <label style={{ textAlign: "center", fontSize: 14 }}>{data.Production_Name}</label>
+                        <label style={{ marginTop: "5px", marginLeft: "20%" }}>{prod.Production_Name}</label>
                       </div>
                     ))}
                   </div>
-                  <Button variant='contained' color='primary' onClick={handleclick} style={{ float: "right" }}>Add New Production</Button>
                 </CardContent>
               </Card>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+              <Button variant='contained' color='primary' onClick={handleclick} style={{ marginTop: "10%", float: "right" }}>Add New Production</Button>
+            </CardContent >
+          </Card >
+        </div >
+      </div >
     </>
   )
 }

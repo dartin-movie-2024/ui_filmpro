@@ -1,3 +1,4 @@
+import { useLocation, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from "react";
 import { serverURL } from "../../constants";
 import axios from "axios";
@@ -31,9 +32,11 @@ const useStyles = makeStyles((theme) => ({
   },
   heading: {
     ...borderBox,
+    fontSize: "14px",
     padding: "0",
     widtn: "100%",
     textAlign: "center",
+
   },
   container: {
     ...borderBox,
@@ -57,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     height: "100%",
     backgroundColor: "white",
-    boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)"
+    // boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.5)"
   },
   assigndepsContent: {
     ...flexColumn,
@@ -104,6 +107,7 @@ const useStyles = makeStyles((theme) => ({
     overflowX: "auto",
   },
   cardHeader: {
+    fontSize: "10px",
     height: "3px",
     background: "#d8e8ee",
   },
@@ -130,6 +134,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Department() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const queryParams = new URLSearchParams(location.search);
+  const prod_id = queryParams.get('id');
   const dir = {
     name: "Abcd efg"
   }
@@ -155,7 +163,7 @@ function Department() {
     setdepart("")
     setIsNewRowAdded(true);
     const formData1 = {
-      'Production_id': "3",
+      'Production_id': prod_id,
       'Department_Name': depart,
       'Total_Members': membersdep,
       'Department_Type': selectradio,
@@ -249,7 +257,7 @@ function Department() {
     setDep4Data([...dep4Data, newData]);
     setdep("");
     const formData2 = {
-      'Production_id': "3",
+      'Production_id': prod_id,
       'Department_Id': subdep,
       'SubDepartment_Name': dep,
       'Total_Members': memberssubdep,
