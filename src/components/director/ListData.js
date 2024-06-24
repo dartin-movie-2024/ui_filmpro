@@ -62,40 +62,79 @@ const ListData = ({
   // TODO: good example of how to use useEffect to fetch data
   useEffect(() => {
     let isCancelled = false;
-    if (isCancelled === false) setLoading(true);
-    const storedData = localStorage.getItem("myData");
-    console.log(storedData);
+    if (!isCancelled) setLoading(true);
+    // const storedData = localStorage.getItem("myData");
+    // console.log("Stored Data:", storedData);
     axios({
       method: fetchType,
       url: `${serverURL}/${fetchAPI}`,
       headers: {
-        Authorization: "Bearer " +"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
       },
     })
       .then((result) => {
-        console.log(result);
-        console.log("Verify crew");
-        const { rows, columns } = result?.data || { rows: [], columns: [] };
-        const columnsWithEditButton = [
-          ...columns,
-          getListEditButton(rows)[editButtonConfig],
-        ];
+        if (!isCancelled) {
+          let rows = result.data.result;
+          if (!rows || rows.length === 0) {
+            console.error("No data returned from API");
+            return; // Early return if no data
+          }
+          rows = rows.map(row => ({
+            id: row.Crew_Id,
+            ...row,
+          }));
 
-        setRows(rows);
-        setFilteredRows(rows);
-        setColumns(columnsWithEditButton);
+          let columns = rows.length > 0 ? Object.keys(rows[0])
+            .filter(key => key !== 'Crew_Id') // Exclude 'Crew_Id' from the keys
+            .map(key => ({
+              field: key,
+              headerName: key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+              width: 200,
+            })) : [];
+
+          if (columns.length > 0) {
+            // Assuming you want to set a specific width for a column named 'Name'
+            const nameColumnIndex = columns.findIndex(column => column.field === 'id');
+            if (nameColumnIndex !== -1) {
+              columns[nameColumnIndex].width = 100; // Set specific width for 'Name' column
+            }
+          }
+
+          const editButtonColumn = getListEditButton(rows)[editButtonConfig];
+          if (editButtonColumn) {
+            columns.push(editButtonColumn);
+          } else {
+            console.error("Edit button column definition is missing");
+          }
+
+          setRows(rows);
+          setFilteredRows(rows);
+          setColumns(columns);
+        }
       })
-      .catch((err) => console.log(err))
-      .finally(() => setLoading(false));
+      .catch(error => {
+        console.error("Error fetching data:", error);
+      })
+      .finally(() => {
+        if (!isCancelled) setLoading(false);
+      });
+
+    return () => {
+      isCancelled = true;
+    };
   }, [editButtonConfig, fetchAPI, fetchType]);
 
-  const handleSearchChange = (event) => {
-    const searchQuery = event.target.value;
 
-    const filteredRowsData = !!searchQuery
-      ? rows.filter((row) =>
-          row[searchByField].toLowerCase().includes(searchQuery.toLowerCase())
-        )
+  const handleSearchChange = (event) => {
+    const searchQuery = event.target.value.trim();
+    console.log("Search by field:", searchByField); // Log the searchByField value
+
+    const filteredRowsData = searchQuery
+      ? rows.filter((row) => {
+        console.log("Row data:", row); // Log the entire row
+        console.log("Data for field [" + searchByField + "]:", row[searchByField]); // Log the specific field value
+        return row[searchByField] !== undefined && row[searchByField].toString().toLowerCase().includes(searchQuery.toLowerCase());
+      })
       : rows;
     setFilteredRows(filteredRowsData);
   };
@@ -113,7 +152,7 @@ const ListData = ({
         <TextField
           className={classes.searchInput}
           id="input-with-icon-textfield"
-          placeholder="Search Crew..."
+          placeholder="Search Crew by Name..."
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">

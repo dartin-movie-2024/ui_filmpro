@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "0",
     widtn: "100%",
     textAlign: "center",
-    
+
   },
   container: {
     ...borderBox,

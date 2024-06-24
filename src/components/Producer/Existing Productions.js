@@ -71,20 +71,18 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: "300px",
     overflow: "auto"
   },
-    tile:{
-      bordeRradius: "5px 5px",
-      width: "200px",
-      height: "300px",
-      margin: "10px",
-      border: "1px solid #ddd",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      overflow: "hidden",
-      borderRadius:"5px 5px",
-    },
-  
-
+  tile: {
+    bordeRradius: "5px 5px",
+    width: "200px",
+    height: "300px",
+    margin: "10px",
+    border: "1px solid #ddd",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+    borderRadius: "5px 5px",
+  },
   tileimg: {
     width: "100%",
     height: "100%",
@@ -133,7 +131,7 @@ function ExistingProds() {
   }
   return (
     <>
-    <Paper style={{width:"100%", textAlign:"center"}}><h3>Existing Productions</h3></Paper>
+      <Paper style={{ width: "100%", textAlign: "center" }}><h3>Existing Productions</h3></Paper>
       <div className={classes.containerexist}>
         <div className={classes.containerBodyexist}>
           <Card className={classes.existForm}>
@@ -143,27 +141,27 @@ function ExistingProds() {
                   <div className={classes.row}>
                   </div>
                   <div className={classes.Tile}>
-                  {finaldata.map((prod) => (
-                    <div key={prod.Production_id} style={{ display: "flex", flexDirection: "column" }}>
-                      <div className={classes.tile}>
-                        <img
-                          src={prod.Image_Path}
-                          alt={prod.Production_Name}
-                          onClick={() => handleClickProdCrew(prod.Production_id)}
-                          style={{ cursor: "pointer" }}
-                        />
+                    {finaldata.map((prod) => (
+                      <div key={prod.Production_id} style={{ display: "flex", flexDirection: "column" }}>
+                        <div className={classes.tile}>
+                          <img
+                            src={prod.Image_Path}
+                            alt={prod.Production_Name}
+                            onClick={() => handleClickProdCrew(prod.Production_id)}
+                            style={{ cursor: "pointer" }}
+                          />
+                        </div>
+                        <label style={{ marginTop: "5px", marginLeft: "20%" }}>{prod.Production_Name}</label>
                       </div>
-                      <label style={{ marginTop: "5px", marginLeft: "20%" }}>{prod.Production_Name}</label>
-                    </div>
-                  ))}
+                    ))}
                   </div>
                 </CardContent>
               </Card>
-              <Button variant='contained' color='primary' onClick={handleclick} style={{ marginTop:"10%",float: "right" }}>Add New Production</Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+              <Button variant='contained' color='primary' onClick={handleclick} style={{ marginTop: "10%", float: "right" }}>Add New Production</Button>
+            </CardContent >
+          </Card >
+        </div >
+      </div >
     </>
   )
 }
