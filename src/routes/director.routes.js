@@ -40,7 +40,7 @@ export const directorRoutes = () => (
       element={
         <SetupComponent
           paths={{
-            "Scenes Setup": PATHS.SCENE_SETUP,
+            "Scene Setup": PATHS.SCENE_SETUP,
             "Character Setup": PATHS.CHARACTER_SETUP,
             "Location Setup": PATHS.LOCATION_SETUP,
           }}

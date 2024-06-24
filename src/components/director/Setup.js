@@ -105,10 +105,7 @@ const SetupComponent = ({ paths }) => {
               variant="contained"
               className={classes.viewButton}
               color="primary"
-              onClick={() => {
-                navigate(paths[setup.name.toLowerCase().replace(' ', '_')]);
-              }}
-            >
+              onClick={() => { navigate(paths[setup.name]); }}>
               View
             </Button>
           </CardActions>
