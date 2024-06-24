@@ -27,14 +27,20 @@ const useStyles = makeStyles((theme) => ({
 const CrewTable = ({ rows, columns }) => {
     const classes = useStyles();
 
+    // Adjust column widths before rendering    
+    const adjustedColumns = columns.map(column => ({
+        ...column,
+        width: column.width || 150 // Set a default width if not specified
+    }));
+
     return (
         <div className={classes.root}>
             <DataGrid
                 rows={rows}
-                columns={columns}
+                columns={adjustedColumns}
                 checkboxSelection
                 disableSelectionOnClick
-                />
+            />
         </div>
     );
 };

@@ -14,8 +14,13 @@ import AddIcon from '@mui/icons-material/Add';
 import BarChartIcon from "@material-ui/icons/BarChart";
 import AppShortcutIcon from '@mui/icons-material/AppShortcut';
 import PersonIcon from "@material-ui/icons/Person";
+import Groups3Icon from '@mui/icons-material/Groups3';
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import FullPageContainer from "./FullPageContainer";
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import Collapse from '@material-ui/core/Collapse';
+
 import {
   ListItem,
   ListItemIcon,
@@ -23,7 +28,7 @@ import {
   Typography,
 } from "@material-ui/core";
 
-import { ProducerListItems } from "../constants";
+import { ProducerListItems_crew } from "../constants";
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -121,31 +126,38 @@ const useStyles = makeStyles((theme) => ({
 }));
 const getIcon = (icon) => {
   switch (icon) {
-    case "PersonIcon":
-      return <PersonIcon style={{ color: "#fff" }} />;
-    // case "GroupIcon":
-    //     return <GroupIcon style={{ color: "#fff" }} />;
+    // case "PersonIcon":
+    //   return <PersonIcon style={{ color: "#fff" }} />;
+    case "Groups3Icon":
+        return <Groups3Icon style={{ color: "#fff" }} />;
+    case "GroupIcon":
+        return <GroupIcon style={{ color: "#fff" }} />;
     // case "AttachMoneyIcon":
     //     return <AttachMoneyIcon style={{ color: "#fff" }} />;  
-    // case "BarChartIcon":
-    //   return <BarChartIcon style={{ color: "#fff" }} />;
-    //   case "AddIcon":
-    //     return <AddIcon style={{ color: "#fff" }} />;
-    case "AppShortcutIcon":
-      return <AppShortcutIcon style={{ color: "#fff" }} />;
+    case "BarChartIcon":
+      return <BarChartIcon style={{ color: "#fff" }} />;
+      case "AddIcon":
+        return <AddIcon style={{ color: "#fff" }} />;
+    // case "AppShortcutIcon":
+    //   return <AppShortcutIcon style={{ color: "#fff" }} />;
     default:
       return null;
   }
 };
 
-const Producer = (props) => {
+const Prod_crew = (props) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [crewSubMenuOpen, setCrewSubMenuOpen] = React.useState(false);
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
   const handleDrawerClose = () => {
     setOpen(false);
+  };
+  const handleCrewSubMenuToggle = () => {
+    setCrewSubMenuOpen(!crewSubMenuOpen);
   };
   const navigate = useNavigate();
   const outlet = useOutlet();
@@ -178,20 +190,28 @@ const Producer = (props) => {
         </div>
         <Divider />
         <List className={classes.navList}>
-          {ProducerListItems.map((item, index) => {
-            return (
-              <ListItem
-                button
-                onClick={() => {
-                  navigate(item.route);
-                }}
-                key={index}
-              >
-                <ListItemIcon>{getIcon(item.icon)}</ListItemIcon>
-                <ListItemText style={{ color: "#fff" }} primary={item.text} />
-              </ListItem>
-            );
-          })}
+        <ListItem button onClick={handleCrewSubMenuToggle}>
+            <ListItemIcon>{getIcon("Groups3Icon")}</ListItemIcon>
+            <ListItemText style={{ color: "#fff" }} primary="Crew" />
+            {crewSubMenuOpen ? <ExpandLess /> : <ExpandMore />}
+          </ListItem>
+
+          {/* Crew Submenu */}
+          <Collapse in={crewSubMenuOpen} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              {ProducerListItems_crew.map((item, index) => (
+                <ListItem
+                  button
+                  key={index}
+                  onClick={() => navigate(item.route)}
+                  className={classes.nested}
+                >
+                  <ListItemIcon>{getIcon(item.icon)}</ListItemIcon>
+                  <ListItemText style={{ color: "#fff" }} primary={item.text} />
+                </ListItem>
+              ))}
+            </List>
+          </Collapse>
         </List>
       </Drawer>
       <FullPageContainer>
@@ -209,4 +229,4 @@ const Producer = (props) => {
   );
 };
 
-export default Producer;
+export default Prod_crew;

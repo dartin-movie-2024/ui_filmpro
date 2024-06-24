@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, makeStyles } from "@material-ui/core";
 import CharacterCard from "../reusable-components/CharacterCard";
 import axios from "axios";
-import { serverURL } from "../../constants";
+import { ProducerListItems, serverURL } from "../../constants";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SelectedCharacterList = ({ fetchAPI, fetchType }) => {
+
   const classes = useStyles();
   const [loading, setLoading] = useState(true);
   const [characters, setCharacters] = useState([]);
@@ -47,6 +48,10 @@ const SelectedCharacterList = ({ fetchAPI, fetchType }) => {
     axios({
       method: fetchType,
       url: `${serverURL}/${fetchAPI}`,
+      headers: {
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+      },
+      data: new URLSearchParams({ Production_id: '21' })
     })
       .then(({ data: { result = [] } }) =>
         setCharacters([...getModifiedCharactersArray(result)])
@@ -146,8 +151,7 @@ const SelectedCharacterList = ({ fetchAPI, fetchType }) => {
             className={classes.footerButton}
             variant="contained"
             color="primary"
-            disabled={!selectedCharacter?.id}
-          >
+            disabled={!selectedCharacter?.id}>
             Search Database
           </Button>
         </Link>
@@ -155,8 +159,7 @@ const SelectedCharacterList = ({ fetchAPI, fetchType }) => {
           <Button
             className={classes.footerButton}
             variant="contained"
-            color="primary"
-          >
+            color="primary">
             Add Actor
           </Button>
         </Link>

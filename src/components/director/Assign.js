@@ -117,62 +117,59 @@ const Assign = (props) => {
     {
       title: "Open Scenes",
       subHeader: "",
+      apiEndpoint: "/api/status_scence",
+      status: "Open",
     },
     {
       title: "Open Characters",
       subHeader: "",
+      apiEndpoint: "/api/status_character",
+      status: "Open",
     },
     {
       title: "Open Locations",
       subHeader: "",
+      apiEndpoint: "/api/status_location",
+      status: "Open",
     },
     {
       title: "Assigned Scenes",
       subHeader: "",
+      apiEndpoint: "/api/status_scence",
+      status: "Assigned",
     },
     {
       title: "Assigned Characters",
       subHeader: "",
+      apiEndpoint: "api/director_search/assign_character",
+      status: "Assigned",
     },
     {
       title: "Assigned Locations",
       subHeader: "",
+      apiEndpoint: "/api/status_location",
+      status: "Assigned",
     },
     {
       title: "Submitted Scenes",
       subHeader: "",
+      apiEndpoint: "/api/status_scence",
+      status: "Completed",
     },
     {
       title: "Submitted Characters",
       subHeader: "",
+      apiEndpoint: "/api/status_character",
+      status: "Completed",
     },
     {
       title: "Submitted Locations",
       subHeader: "",
+      apiEndpoint: "/api/status_location",
+      status: "Completed",
     },
   ];
-  //   const handleCharacterDataUpdate = (e) => {
-  //     const { value, name } = e.target;
-  //     const updatedCharacter = { ...selectedCharacter, [name]: value };
-  //     setSelectedCharacter(updatedCharacter);
-  //   };
-
-  //   const saveCharacter = () => {
-  //     axios
-  //       .post(`${serverURL}/saveCharacter`, selectedCharacter, {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       })
-  //       .then((response) => {
-  //         console.log("🚀 ~ response:", response);
-  //       })
-  //       .catch((error) => {
-  //         // handle errors
-  //         console.log(error);
-  //       });
-  //   };
-
+     
   return (
     <div className={classes.container}>
       <div className={classes.containerBody}>
@@ -202,17 +199,71 @@ const Assign = (props) => {
 
 const CardContentContainer = function ({ card }) {
   const classes = useStyles();
+  const [data, setData] = useState([]);
+  useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const storedData = localStorage.getItem("authToken");
+  
+          const response = await axios({
+            method: "POST",
+            url: `${serverURL}${card.apiEndpoint}`,
+            headers: {
+              "Content-Type": "application/json",
+              Authorization:"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+            },
+          });
+          const statusKeyMapping = {
+            'Open': 'Open',
+            'Assigned': 'Assigned',
+            'Completed': 'Completed',
+          };
+          //console.log(response)
+          const responseKey = statusKeyMapping[card.status] || '';
+           const responseData = response.data[`${responseKey} records`] || response.data["Submitted records"] || [];
+          console.log(responseData)
+          const allData = Array.isArray(responseData) ? responseData : [];
+          //console.log(allData)
+        
+
+        const filteredData =allData.filter(item => item.Status === card.status);
+       
+        if (Array.isArray(filteredData)) {
+          setData(filteredData);
+          //console.log(filteredData);
+         }
+      } catch (error) {
+        console.error(`Error fetching data for ${card.title}:`, error);
+      }
+    };
+    fetchData();
+  }, [card.title,card.apiEndpoint]);
   return (
     <div className={classes.cardContentContainer}>
-      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => {
+      {data.map((item) => {
         return (
-          <Card className={classes.cardItem}>
+          <Card key={item.id} className={classes.cardItem}>
             <div className={classes.cardItemHeader}>
-              <span>Scene {item}</span>
+              <span>Scene {item.Scene_Id}</span>
               <b>Detailed view</b>
             </div>
             <div className={classes.cardItemBody}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            {/* <div>Assigned To: {item.Assigned_To}</div>
+              <div>Assigned Date: {item.Assigned_date}</div>
+              <div>Location ID: {item.Location_Id}</div>
+              <div>No. Of Scenes: {item.No_Of_Scenes}</div>
+              <div>Screen Time (Minutes): {item.Screen_Time_Minutes}</div>
+              <div>Shoot Time (Minutes): {item.Shoot_Time_Minutes}</div>
+              <div>Special Requirements: {item.Special_requirements}</div> */}
+             {card.title === "Open Scenes" || card.title === "Submitted Scenes" || card.title === "Assigned Scenes"  && (
+                <div>Description: {item.Short_description}</div>
+              )}
+              {(card.title === "Open Locations" || card.title === "Submitted Locations" || card.title === "Assigned Locations") && (
+                <div>Description: {item.AD_Instructions}</div>
+              )} 
+              {(card.title === "Assigned Characters") && (
+                <div>Description: {item.Description}</div>
+              )}
             </div>
             <div className={classes.cardItemFooter}>Approved</div>
           </Card>
@@ -223,3 +274,4 @@ const CardContentContainer = function ({ card }) {
 };
 
 export default Assign;
+

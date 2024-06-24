@@ -1,5 +1,3 @@
-
-import React, {useState } from "react";
 import {
   Button,
   Card,
@@ -11,14 +9,18 @@ import {
   makeStyles,
   Paper,
 } from "@material-ui/core";
+import { serverURL } from "../../constants";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+
 const flexColumn = {
   display: "flex",
   flexDirection: "column",
 };
-const flexRow={
+const flexRow = {
   display: "flex",
-  flexDirection: "row", 
-}
+  flexDirection: "row",
+};
 const borderBox = {
   boxSizing: "border-box",
 };
@@ -57,69 +59,59 @@ const useStyles = makeStyles((theme) => ({
     padding: "1rem",
     overflow: "auto",
     backgroundColor: "#d8e8ee",
-    flex:"1",
+    flex: "1",
   },
   cardHeader: {
-    height:"3px",
+    height: "3px",
     background: "#d8e8ee",
   },
-  row:{
+  row: {
     ...flexRow,
-    flexGrow:"1",
-    justifyContent:"space-around",
-    width:"100%",
+    flexGrow: "1",
+    justifyContent: "space-around",
+    width: "100%",
+    display: "grid",
+    gap: "10px",
+    gridTemplateColumns: "1fr 1fr 1fr",
   },
 }));
-const departments = {
-  "Direction": {
-    "Sub-Departments": ["Direction Team", "Location"],
-    "Designations": {
-      "Direction Team": ["First AD", "Second AD"],
-      "Location":["dsd","ddcc"]
-    },
-  },
 
-  "Camera & Lighting": {
-    "Sub-Departments": ["Photography", "Lighting"],
-    "Designations": {
-      "Photography": ["DOP", "camera operator", "camera assistant", "sec cam assistant", "steadicam operator", "Focus Puller"],
-      "Lighting":["rwrr","fqws"]
-    },
-  },
-};
-
-function Designations()
-{
-
-    const [selectedDepartment, setSelectedDepartment] = useState("");
+function Designations() {
+  const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedSubDepartment, setSelectedSubDepartment] = useState("");
   const [selectedDesignation, setSelectedDesignation] = useState("");
-  const [showAddNewDepartment, setShowAddNewDepartment] = useState(false); 
+  const [showAddNewDepartment, setShowAddNewDepartment] = useState(false);
   const [newDepartment, setNewDepartment] = useState("");
   const [showAddNewSubDepartment, setShowAddNewSubDepartment] = useState(false);
   const [showAddNewDesignation, setShowAddNewDesignation] = useState(false);
-  const [newSubDepartment, setNewSubDepartment] = useState(""); 
-  const [showAddNew, setShowAddNew] = useState(false); 
-  const [newDesignation, setNewDesignation] = useState(""); 
+  const [newSubDepartment, setNewSubDepartment] = useState("");
+  const [newDesignation, setNewDesignation] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const [departments, setDepartments] = useState([]);
+  const [subDepartments, setSubDepartments] = useState([]);
+  const [designations, setDesignations] = useState([]);
+
   const handleDepartmentChange = (e) => {
     const department = e.target.value;
     setSelectedDepartment(department);
-    setSelectedSubDepartment(""); 
+    setSelectedSubDepartment("");
     setSelectedDesignation("");
   };
 
   const handleSubDepartmentChange = (e) => {
     const subDepartment = e.target.value;
     setSelectedSubDepartment(subDepartment);
-    setSelectedDesignation(""); 
+    setSelectedDesignation("");
   };
 
   const handleDesignationChange = (e) => {
     const designation = e.target.value;
     setSelectedDesignation(designation);
   };
+
   const handleAddNewDepartmentClick = () => {
-    setShowAddNewDepartment(true); 
+    setShowAddNewDepartment(true);
   };
 
   const handleAddNewSubDepartmentClick = () => {
@@ -130,8 +122,14 @@ function Designations()
     const newDepartmentValue = e.target.value;
     setNewDepartment(newDepartmentValue);
   };
+
+  const handleNewSubDepartmentChange = (e) => {
+    const newSubDepartmentValue = e.target.value;
+    setNewSubDepartment(newSubDepartmentValue);
+  };
+
   const handleAddNewClick = () => {
-    setShowAddNew(true); 
+    setShowAddNewDesignation(true);
   };
 
   const handleNewDesignationChange = (e) => {
@@ -140,151 +138,273 @@ function Designations()
   };
 
   const addNewDesignation = () => {
-    departments[selectedDepartment]["Designations"][selectedSubDepartment].push(
-      newDesignation
-    );
-    setNewDesignation("");
-    setShowAddNew(false);
+    if (selectedSubDepartment) {
+      setDesignations((prevDesignations) => [
+        ...prevDesignations,
+        { des: newDesignation, subdep: selectedSubDepartment },
+      ]);
+      setNewDesignation("");
+      setShowAddNewDesignation(false);
+    }
   };
-  const handleNewSubDepartmentChange = (e) => {
-    const newSubDepartmentValue = e.target.value;
-    setNewSubDepartment(newSubDepartmentValue);
-  };
+
   const addNewDepartment = () => {
-    departments[newDepartment] = {
-      "Sub-Departments": [],
-      "Designations": {},
-    };
+    setDepartments((prevDepartments) => [
+      ...prevDepartments,
+      { dep: newDepartment },
+    ]);
     setNewDepartment("");
     setShowAddNewDepartment(false);
   };
 
   const addNewSubDepartment = () => {
-
-    if (selectedDepartment && departments[selectedDepartment]) {
-      departments[selectedDepartment]["Sub-Departments"].push(newSubDepartment);
+    if (selectedDepartment) {
+      setSubDepartments((prevSubDepartments) => [
+        ...prevSubDepartments,
+        { subdep: newSubDepartment, dep: selectedDepartment },
+      ]);
+      setNewSubDepartment("");
+      setShowAddNewSubDepartment(false);
     }
-    setNewSubDepartment("");
-    setShowAddNewSubDepartment(false);
   };
 
-    const classes = useStyles();
-    return(
-        <>
-        <div className={classes.containerdes}>
+  useEffect(() => {
+    axios({
+      method: "GET",
+      url: `${serverURL}/api/get_department`,
+      headers: {
+        Authorization:
+          "Bearer " +
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+        "Content-Type": "multipart/form-data",
+      },
+    })
+      .then((response) => {
+        const departmentData = response.data.result.map((department) => ({
+          dep: department.Department_Name,
+        }));
+        setDepartments(departmentData);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching departments:", error);
+        setLoading(false);
+      });
+
+    axios({
+      method: "GET",
+      url: `${serverURL}/api/get_subdepartment`,
+      headers: {
+        Authorization:
+          "Bearer " +
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+        "Content-Type": "multipart/form-data",
+      },
+    })
+      .then((response) => {
+        const subdepartmentData = response.data.result.map((subdepartment) => ({
+          subdep: subdepartment.SubDepartment_Name,
+          dep: subdepartment.Department_Name, 
+        }));
+        setSubDepartments(subdepartmentData);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching sub-departments:", error);
+        setLoading(false);
+      });
+
+    axios({
+      method: "GET",
+      url: `${serverURL}/api/get_designations`,
+      headers: {
+        Authorization:
+          "Bearer " +
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+        "Content-Type": "multipart/form-data",
+      },
+    })
+      .then((response) => {
+        const designationData = response.data.result.map((designation) => ({
+          des: designation.Designation_Name,
+          subdep: designation.SubDepartment_Name, 
+        }));
+        setDesignations(designationData);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching designations:", error);
+        setLoading(false);
+      });
+  }, []);
+
+  const classes = useStyles();
+  return (
+    <>
+      <div className={classes.containerdes}>
         <div className={classes.containerBodydes}>
-        <Card className={classes.DeignForm}>
-        <CardContent>
-        <div>
-        <Paper style={{textAlign:"center"}}><h2>SELECT DESIGNATIONS</h2></Paper>
-        </div>
-        <Card>
-          <CardContent>
-        <div className={classes.row}>
-        <div>
-      <Card>
-          <CardContent style={{display:"flex",flexDirection:"column"}}>
-        <CardHeader title="Department" className={classes.cardHeader}/>
-    <Select className={classes.Dropdown} value={selectedDepartment} variant="outlined" color="primary" onChange={handleDepartmentChange} >
-        <em>Select a Department</em>
-      {Object.keys(departments).map((department, index) => (
-        <MenuItem key={index} value={department}>{department}</MenuItem>
-         ))}
-         <MenuItem value="Add New" onClick={handleAddNewDepartmentClick}>
+          <Card className={classes.DeignForm}>
+            <CardContent>
+              <div>
+                <Paper style={{ textAlign: "center" }}>
+                  <h2>SELECT DESIGNATIONS</h2>
+                </Paper>
+              </div>
+              <Card>
+                <CardContent>
+                  <div className={classes.row}>
+                    <div className={classes.grid1}>
+                      <Card>
+                        <CardContent style={{ display: "flex", flexDirection: "column" }}>
+                          <CardHeader title="Department" className={classes.cardHeader} />
+                          <Select
+                            className={classes.Dropdown}
+                            value={selectedDepartment}
+                            variant="outlined"
+                            color="primary"
+                            onChange={handleDepartmentChange}
+                          >
+                            <em>Select a Department</em>
+                            {departments.map((department, index) => (
+                              <MenuItem key={index} value={department.dep}>
+                                {department.dep}
+                              </MenuItem>
+                            ))}
+                            <MenuItem
+                              value="Add New"
+                              onClick={handleAddNewDepartmentClick}
+                              style={{ color: "blue" }}
+                            >
                               Add New
                             </MenuItem>
-
-  </Select>
-  {showAddNewDepartment && (
-<TextField label="New Department"value={newDepartment}onChange={handleNewDepartmentChange}variant="outlined"/>
- )}{showAddNewDepartment && (
-   <Button variant="contained"color="primary" onClick={addNewDepartment}>
-    Add</Button>
-    )}
- </CardContent>
-        </Card>
-        </div>
-        <div>
-        <Card>
-      <CardContent style={{display:"flex",flexDirection:"column"}}>
-    <CardHeader title="Sub-Department" className={classes.cardHeader}/>
-    {selectedDepartment && departments[selectedDepartment] &&(
-      <Select className={classes.SubDropdown} value={selectedSubDepartment} variant="outlined" color="primary" onChange={handleSubDepartmentChange}>
-      <em>Select a Sub-Department</em>
-    {departments[selectedDepartment]["Sub-Departments"].map((subDepartment, index) => (
-     <MenuItem key={index} value={subDepartment}>{subDepartment}</MenuItem>
-       ))}
-       <MenuItem value="Add New" onClick={() => handleAddNewClick("subDepartment")}>Add New</MenuItem>
-       <MenuItem value="Add New" onClick={handleAddNewSubDepartmentClick}>
-                                  Add New
-                                </MenuItem>
-       </Select>
-       
-       )}
-           {showAddNewSubDepartment && (
-                            <TextField
-                              label="New Sub-Department"
-                              value={newSubDepartment}
-                              onChange={handleNewSubDepartmentChange}
+                          </Select>
+                          {showAddNewDepartment && (
+                            <>
+                              <TextField
+                                label="New Department"
+                                value={newDepartment}
+                                onChange={handleNewDepartmentChange}
+                                variant="outlined"
+                              />
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={addNewDepartment}
+                              >
+                                Add
+                              </Button>
+                            </>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </div>
+                    <div className={classes.grid1}>
+                      <Card>
+                        <CardContent style={{ display: "flex", flexDirection: "column" }}>
+                          <CardHeader title="Sub-Department" className={classes.cardHeader} />
+                          {selectedDepartment && (
+                            <Select
+                              className={classes.SubDropdown}
+                              value={selectedSubDepartment}
                               variant="outlined"
-                            />
+                              color="primary"
+                              onChange={handleSubDepartmentChange}
+                            >
+                              <em>Select a Sub-Department</em>
+                              {subDepartments
+                                // .filter((subdep) => subdep.dep === selectedDepartment)
+                                .map((subDepartment, index) => (
+                                  <MenuItem key={index} value={subDepartment.subdep}>
+                                    {subDepartment.subdep}
+                                  </MenuItem>
+                                ))}
+                              <MenuItem
+                                value="Add New"
+                                onClick={handleAddNewSubDepartmentClick}
+                                style={{ color: "blue" }}
+                              >
+                                Add New
+                              </MenuItem>
+                            </Select>
                           )}
                           {showAddNewSubDepartment && (
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              onClick={addNewSubDepartment}
-                            >
-                              Add
-                            </Button>
+                            <>
+                              <TextField
+                                label="New Sub-Department"
+                                value={newSubDepartment}
+                                onChange={handleNewSubDepartmentChange}
+                                variant="outlined"
+                              />
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={addNewSubDepartment}
+                              >
+                                Add
+                              </Button>
+                            </>
                           )}
-        </CardContent>
-        </Card>
-        </div>
-        <div>
- <Card>
-<CardContent style={{display:"flex",flexDirection:"column"}}>
-  <CardHeader title="Designation" className={classes.cardHeader}/>
-  {selectedSubDepartment &&
-  departments[selectedDepartment]?.["Designations"] &&
- departments[selectedDepartment]["Designations"][selectedSubDepartment] && (
-<Select className={classes.SubDropdown1} value={selectedDesignation}variant="outlined" color="primary" onChange={handleDesignationChange} >
-  <em>Select a Designation</em>
-{departments[selectedDepartment]["Designations"][selectedSubDepartment].map((designation, index) => (
- <MenuItem key={index} value={designation} >{designation}</MenuItem>
-
-        ))}
-        <MenuItem value="Add New" onClick={handleAddNewClick}>Add New</MenuItem>
-  </Select>
-  )}
-     {showAddNewDesignation && (
-                            <TextField
-                              label="New Designation"
-                              value={newDesignation}
-                              onChange={handleNewDesignationChange}
+                        </CardContent>
+                      </Card>
+                    </div>
+                    <div className={classes.grid1}>
+                      <Card>
+                        <CardContent style={{ display: "flex", flexDirection: "column" }}>
+                          <CardHeader title="Designation" className={classes.cardHeader} />
+                          {selectedSubDepartment && (
+                            <Select
+                              className={classes.SubDropdown1}
+                              value={selectedDesignation}
                               variant="outlined"
-                            />
+                              color="primary"
+                              onChange={handleDesignationChange}
+                            >
+                              <em>Select a Designation</em>
+                              {designations
+                                // .filter((desig) => desig.subdep === selectedSubDepartment)
+                                .map((designation, index) => (
+                                  <MenuItem key={index} value={designation.des}>
+                                    {designation.des}
+                                  </MenuItem>
+                                ))}
+                              <MenuItem
+                                value="Add New"
+                                onClick={handleAddNewClick}
+                                style={{ color: "blue" }}
+                              >
+                                Add New
+                              </MenuItem>
+                            </Select>
                           )}
                           {showAddNewDesignation && (
-                            <Button
-                              variant="contained"
-                              color="primary"
-                              onClick={addNewDesignation}
-                            >
-                              Add
-                            </Button>
+                            <>
+                              <TextField
+                                label="New Designation"
+                                value={newDesignation}
+                                onChange={handleNewDesignationChange}
+                                variant="outlined"
+                              />
+                              <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={addNewDesignation}
+                              >
+                                Add
+                              </Button>
+                            </>
                           )}
- </CardContent>
- </Card>
- </div>
-            </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </CardContent>
-            </Card>
-        </CardContent>
-        </Card>
+          </Card>
         </div>
-        </div>
-        </>
-    )
+      </div>
+    </>
+  );
 }
+
 export default Designations;
