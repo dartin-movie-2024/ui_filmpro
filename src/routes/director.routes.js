@@ -72,7 +72,7 @@ export const directorRoutes = () => (
           headerText="Character Setup"
           fetchAPI="api/get_character_setup"
           fetchType="POST"
-          searchByField="characterName"
+          searchByField="Character_Name"
         />
       }
     />

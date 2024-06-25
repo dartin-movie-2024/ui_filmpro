@@ -73,7 +73,7 @@ const ListData = ({
             return;
           }
           rows = rows.map(row => ({
-            id: row.Crew_Id || row.Scene_Id || row.Location_Id,
+            id: row.Crew_Id || row.Character_id || row.Scene_Id || row.Location_Id,
             ...row,
           }));
 
