@@ -59,7 +59,7 @@ export const directorRoutes = () => (
           headerText="Scene Setup"
           fetchAPI="api/get_scene_setup"
           fetchType="GET"
-          searchByField="sceneLocation"
+          searchByField="Scene_Location"
         />
       }
     />

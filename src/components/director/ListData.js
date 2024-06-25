@@ -128,12 +128,15 @@ const ListData = ({
     const searchQuery = event.target.value.trim();
 
     const filteredRowsData = searchQuery
-      ? rows.filter((row) =>
-        row[searchByField]
-          .toString()
-          .toLowerCase()
-          .includes(searchQuery.toLowerCase())
-      )
+      ? rows.filter((row) => {
+        if (row[searchByField] !== undefined) {
+          return row[searchByField]
+            .toString()
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase());
+        }
+        return false;
+      })
       : rows;
     setFilteredRows(filteredRowsData);
   };
