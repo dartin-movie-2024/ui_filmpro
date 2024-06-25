@@ -80,7 +80,7 @@ const ListData = ({
             return; // Early return if no data
           }
           rows = rows.map(row => ({
-            id: row.Crew_Id,
+            id: row.Crew_Id || row.Scene_Id,
             ...row,
           }));
 

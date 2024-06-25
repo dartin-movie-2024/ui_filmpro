@@ -56,7 +56,7 @@ export const directorRoutes = () => (
         <ListData
           editButtonConfig="sceneSetup"
           headerText="Scene Setup"
-          fetchAPI="getSceneSetup"
+          fetchAPI="api/get_scene_setup"
           fetchType="GET"
           searchByField="sceneLocation"
         />
