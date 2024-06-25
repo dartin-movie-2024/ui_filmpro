@@ -67,21 +67,17 @@ const CharacterCardList = ({ fetchAPI, fetchType }) => {
 
   // get list of characters
   useEffect(() => {
-    let isCancelled = false;
-    if (isCancelled === false) setLoading(true);
-    const storedData = localStorage.getItem("myData");
+    setLoading(true); // Start loading before the request
 
     axios({
       method: fetchType,
       url: `${serverURL}/${fetchAPI}`,
       headers: {
-        Authorization: "Bearer " + storedData,
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
       },
-      data: { Production_id: 14 },
+      ...(fetchType.toLowerCase() === 'get' ? { params: { Production_id: 14 } } : { data: { Production_id: 14 } }), // Conditionally set params or data based on fetchType
     })
-      .then(({ data: { result = [] } }) =>
-        setCharacters([...getModifiedCharactersArray(result)])
-      )
+      .then(({ data: { result = [] } }) => setCharacters([...getModifiedCharactersArray(result)]))
       .catch((err) => console.log(err))
       .finally(() => setLoading(false));
   }, [fetchAPI, fetchType]);
@@ -89,27 +85,43 @@ const CharacterCardList = ({ fetchAPI, fetchType }) => {
   // get ad list from 'api/asstdirector_list'
   useEffect(() => {
     let isCancelled = false;
-    if (isCancelled === false) setLoading(true);
-    const storedData = localStorage.getItem("myData");
 
-    axios({
-      method: "POST",
-      url: `${serverURL}/${GET_AD_LIST}`,
-      headers: {
-        Authorization: "Bearer " + storedData,
-      },
-      data: { Production_id: 14 },
-    })
-      .then(({ data: { result = [] } }) => {
-        const adListResult = result?.map((ad) => ({
+    const fetchData = async () => {
+      if (isCancelled) return;
+      setLoading(true);
+      try {
+        const response = await axios({
+          method: "POST",
+          url: `${serverURL}/${GET_AD_LIST}`,
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+          },
+          data: { Production_id: 14 },
+        });
+
+        const adListResult = response.data.result?.map(ad => ({
           id: ad.User_id,
           name: ad.Full_Name,
         }));
-        setAdList([...adListResult]);
-      })
-      .catch((err) => console.log(err))
-      .finally(() => setLoading(false));
-  }, [GET_AD_LIST]);
+
+        if (!isCancelled) { // Check again to avoid setting state on unmounted component
+          setAdList([...adListResult]);
+        }
+      }
+      catch (err) { console.error(err); }
+      finally {
+        if (!isCancelled) setLoading(false); // Ensure loading is set to false if not cancelled
+      }
+    };
+
+    fetchData();
+
+    // Cleanup function to set isCancelled true when component unmounts
+    return () => {
+      isCancelled = true;
+    };
+  }, [GET_AD_LIST]); // Dependency array
 
   const cardSelectionToggled = (id) => {
     setCharacters(

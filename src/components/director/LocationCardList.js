@@ -66,15 +66,13 @@ const LocationCardList = ({ fetchAPI, fetchType }) => {
   const { GET_AD_LIST, ASSIGN_LOCATION_TO_AD } = PATHS;
 
   useEffect(() => {
-    let isCancelled = false;
-    if (isCancelled === false) setLoading(true);
-    const storedData = localStorage.getItem("myData");
+    setLoading(true);
 
     axios({
       method: fetchType,
       url: `${serverURL}/${fetchAPI}`,
       headers: {
-        Authorization: "Bearer " + storedData,
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
       },
       data: { Production_id: 14 },
     })
@@ -87,15 +85,14 @@ const LocationCardList = ({ fetchAPI, fetchType }) => {
 
   // get ad list from 'api/asstdirector_list'
   useEffect(() => {
-    let isCancelled = false;
-    if (isCancelled === false) setLoading(true);
-    const storedData = localStorage.getItem("myData");
+    setLoading(true);
 
     axios({
       method: "POST",
       url: `${serverURL}/${GET_AD_LIST}`,
       headers: {
-        Authorization: "Bearer " + storedData,
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
       },
       data: { Production_id: 14 },
     })
