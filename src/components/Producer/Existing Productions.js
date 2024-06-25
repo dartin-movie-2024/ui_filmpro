@@ -103,14 +103,19 @@ function ExistingProds() {
   }
 
   const handleClickProdCrew = (prodId) => {
+    sessionStorage.setItem("selectedProdId", prodId);
     if (window.location.href.includes("Producer")) {
       setSelectedProdId(prodId);
       navigate(`/Prod_crew/Departments?id=${prodId}`);
-    } else {
+    } else if (window.location.href.includes("assistantdirector")) {
+      setSelectedProdId(prodId);
+      navigate(`/assistantdirector/verifyCrew?id=${prodId}`);
+    } else if (window.location.href.includes("director")) {
       setSelectedProdId(prodId);
       navigate(`/director/verifyCrew?id=${prodId}`);
     }
   }
+
 
   useEffect(() => {
     const fetchData = async () => {

@@ -15,6 +15,8 @@ import AddActor from "../components/reusable-components/AddActor";
 import SelectedLocationsList from "../components/assistantdirector/SelectedLocationsList";
 import SearchLocationDatabase from "../components/assistantdirector/SearchLocationDatabase";
 import AddLocation from "../components/reusable-components/AddLocation";
+import ExistingProds from "../components/Producer/Existing Productions";
+
 export const AssistantdirectorRoutes = () => (
   <Route path="/assistantdirector" element={<AssistantDirector />}>
     <Route path="/assistantdirector/UploadScript" element={<UploadScript />} />
@@ -67,6 +69,7 @@ export const AssistantdirectorRoutes = () => (
     />
     <Route path="/assistantdirector/addActor" element={<AddActor />} />
     <Route path="/assistantdirector/addLocation" element={<AddLocation />} />
+    <Route path="/assistantdirector/ExistingProds" element={<ExistingProds />} />
     <Route
       path={PATHS.SCENE_SETUPAD}
       element={
@@ -99,6 +102,7 @@ export const AssistantdirectorRoutes = () => (
     <Route path={PATHS.EDIT_LOCATIONSAD} element={<AssignedLocationsAD />} />
     <Route path={PATHS.ASSIGNAD} element={<AssignAD />} />
     <Route path={PATHS.SCENE_DETAILSAD} element={<SceneDetailsAD />} />
+    
     <Route
       path={PATHS.LOCATION_SETUPAD}
       element={

@@ -8,6 +8,7 @@ import {
   CardContent,
   CardHeader,
   makeStyles,
+  Typography,
 } from "@material-ui/core";
 import { flexColumn, serverURL } from "../../constants";
 import { useNavigate } from "react-router-dom";
@@ -32,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
   cardHeader: {
     textAlign: "center",
     backgroundColor: "#f4f1f1",
+    fontSize: "10px",
   },
   multiProgressComponent: {
     width: "100%",
@@ -92,7 +94,9 @@ const SetupComponent = ({ paths }) => {
     <div className={classes.container}>
       {data.map((setup, index) => (
         <Card className={classes.progressItem} key={index}>
-          <CardHeader className={classes.cardHeader} title={setup.name} />
+          <CardHeader className={classes.cardHeader} title={<Typography variant="h6">
+            {setup.name}
+          </Typography>} />
           <CardContent>
             <MultiProgressComponent
               progressItem={setup.details}

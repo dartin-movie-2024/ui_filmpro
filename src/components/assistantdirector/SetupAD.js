@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import MultiProgressComponent from "../reusable-components/MultiProgress";
-import ListDataAD from "./ListDataAD";
 import {
   Button,
   Card,
@@ -9,6 +8,7 @@ import {
   CardContent,
   CardHeader,
   makeStyles,
+  Typography,
 } from "@material-ui/core";
 import { flexColumn, serverURL } from "../../constants";
 import { useNavigate } from "react-router-dom";
@@ -48,56 +48,73 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SetupComponentAD = ({paths}) => {
+const SetupComponent = ({ paths }) => {
   const classes = useStyles();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // TODO: good example of how to use useEffect to fetch data
   useEffect(() => {
     let isCancelled = false;
-    if (isCancelled === false) setLoading(true);
-    axios({
-      method: "GET",
-      url: `${serverURL}/getSetup`,
-    })
-      .then((result) => {
-        console.log({ result });
-        setData(result.data)
-      })
-      .catch((err) => console.log(err))
-      .finally(() => setLoading(false));
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const result = await axios.get(`${serverURL}/api/count`, {
+          headers: {
+            "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+          },
+        });
+        if (!isCancelled) {
+          const transformedData = Object.keys(result.data).map((key) => ({
+            name: key.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()), // Transform key to a more readable format
+            details: result.data[key].result,
+          }));
+          setData(transformedData);
+        }
+      } catch (err) {
+        if (!isCancelled) {
+          console.error(err);
+        }
+      } finally {
+        if (!isCancelled) setLoading(false);
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isCancelled = true;
+    };
   }, []);
 
   if (loading) return <div>Loading...</div>;
 
   return (
     <div className={classes.container}>
-      {data.map((setup, index) => {
-        return (
-          <Card className={classes.progressItem} key={index}>
-            <CardHeader className={classes.cardHeader} title={setup.name} />
-            <CardContent>
-              <MultiProgressComponent progressItem={setup} />
-            </CardContent>
-            <CardActions className={classes.cardActions}>
-              <Button
-                variant="contained"
-                className={classes.viewButton}
-                color="primary"
-                onClick={() => {
-                  navigate(paths[setup.name]);
-                }}
-              >
-                View
-              </Button>
-            </CardActions>
-          </Card>
-        );
-      })}
+      {data.map((setup, index) => (
+        <Card className={classes.progressItem} key={index}>
+          <CardHeader variant="h5" className={classes.cardHeader} title={<Typography variant="h6">
+                {setup.name}
+              </Typography>} />
+          <CardContent>
+            <MultiProgressComponent
+              progressItem={setup.details}
+              className={classes.multiProgressComponent}
+            />
+          </CardContent>
+          <CardActions className={classes.cardActions}>
+            <Button
+              variant="contained"
+              className={classes.viewButton}
+              color="primary"
+              onClick={() => { navigate(paths[setup.name]); }}>
+              View
+            </Button>
+          </CardActions>
+        </Card>
+      ))}
     </div>
   );
 };
 
-export default SetupComponentAD;
+export default SetupComponent;

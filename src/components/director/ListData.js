@@ -37,15 +37,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-/**
- * Props:
- * editButtonConfig: string // gets edit button renderer from listEditButton.helper.js => getListEditButton()
- * headerText: string
- * fetchAPI: string // API path
- * fetchType: string // GET, POST, etc.
- *
- * TODO: handle body data for POST requests
- */
 const ListData = ({
   editButtonConfig,
   headerText,
@@ -58,45 +49,54 @@ const ListData = ({
   const [columns, setColumns] = useState([]);
   const [filteredRows, setFilteredRows] = useState([]);
   const [loading, setLoading] = useState(true);
+  const productionId = sessionStorage.getItem("selectedProdId");
 
-  // TODO: good example of how to use useEffect to fetch data
   useEffect(() => {
     let isCancelled = false;
     if (!isCancelled) setLoading(true);
-    // const storedData = localStorage.getItem("myData");
-    // console.log("Stored Data:", storedData);
+
+    console.log("prodid", productionId);
     axios({
       method: fetchType,
       url: `${serverURL}/${fetchAPI}`,
       headers: {
-        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+        Authorization: `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+      },
+      data: {
+        Production_id: productionId,
       },
     })
       .then((result) => {
         if (!isCancelled) {
           let rows = result.data.result;
+          console.log(rows)
           if (!rows || rows.length === 0) {
             console.error("No data returned from API");
-            return; // Early return if no data
+            return;
           }
           rows = rows.map(row => ({
             id: row.Crew_Id || row.Scene_Id,
             ...row,
           }));
 
-          let columns = rows.length > 0 ? Object.keys(rows[0])
-            .filter(key => key !== 'Crew_Id') // Exclude 'Crew_Id' from the keys
-            .map(key => ({
-              field: key,
-              headerName: key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-              width: 200,
-            })) : [];
+          let columns = rows.length > 0
+            ? Object.keys(rows[0])
+              .filter((key) => key !== "Crew_Id")
+              .map((key) => ({
+                field: key,
+                headerName: key
+                  .replace(/_/g, " ")
+                  .replace(/\b\w/g, (l) => l.toUpperCase()),
+                width: 200,
+              }))
+            : [];
 
           if (columns.length > 0) {
-            // Assuming you want to set a specific width for a column named 'Name'
-            const nameColumnIndex = columns.findIndex(column => column.field === 'id');
+            const nameColumnIndex = columns.findIndex(
+              (column) => column.field === "id"
+            );
             if (nameColumnIndex !== -1) {
-              columns[nameColumnIndex].width = 100; // Set specific width for 'Name' column
+              columns[nameColumnIndex].width = 100;
             }
           }
 
@@ -112,7 +112,7 @@ const ListData = ({
           setColumns(columns);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.error("Error fetching data:", error);
       })
       .finally(() => {
@@ -122,19 +122,18 @@ const ListData = ({
     return () => {
       isCancelled = true;
     };
-  }, [editButtonConfig, fetchAPI, fetchType]);
-
+  }, [editButtonConfig, fetchAPI, fetchType, productionId]);
 
   const handleSearchChange = (event) => {
     const searchQuery = event.target.value.trim();
-    console.log("Search by field:", searchByField); // Log the searchByField value
 
     const filteredRowsData = searchQuery
-      ? rows.filter((row) => {
-        console.log("Row data:", row); // Log the entire row
-        console.log("Data for field [" + searchByField + "]:", row[searchByField]); // Log the specific field value
-        return row[searchByField] !== undefined && row[searchByField].toString().toLowerCase().includes(searchQuery.toLowerCase());
-      })
+      ? rows.filter((row) =>
+        row[searchByField]
+          .toString()
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
+      )
       : rows;
     setFilteredRows(filteredRowsData);
   };
@@ -152,7 +151,7 @@ const ListData = ({
         <TextField
           className={classes.searchInput}
           id="input-with-icon-textfield"
-          placeholder="Search Crew by Name..."
+          placeholder={`Search Crew by ${searchByField}...`}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
