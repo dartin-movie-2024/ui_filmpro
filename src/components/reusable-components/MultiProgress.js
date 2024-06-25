@@ -8,6 +8,7 @@ const multiProgressColorMap = {
     'Submitted': '#a5a5a5',
     'Approved': '#ffbf00',
     'Pending': '#AA4A44',
+    'Completed': '#AFE1AF',
 };
 
 const useStyles = makeStyles((theme) => ({
