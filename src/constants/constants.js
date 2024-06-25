@@ -24,7 +24,7 @@ export const directorListItems = [
   {
     text: "Director Home",
     icon: "VideocamIcon",
-    route: "/director",
+    route: "/director/ExistingProds",
   },
   {
     text: "Verify Crew",
@@ -76,7 +76,7 @@ export const AssistantdirectorListItems = [
   {
     text: "AD Home",
     icon: "VideocamIcon",
-    route: "/assistantdirector",
+    route: "/assistantdirector/ExistingProds",
   },
   {
     text: "Verify Crew",

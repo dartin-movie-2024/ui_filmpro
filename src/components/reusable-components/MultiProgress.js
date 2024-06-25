@@ -5,7 +5,7 @@ import { centerAligned, flexColumn } from "../../constants";
 const multiProgressColorMap = {
     'Open': '#4472c4',
     'Assigned': '#ed7d32',
-    'Submitted': '#a5a5a5',
+    'Submitted': '#AFE1AF',
     'Approved': '#ffbf00',
     'Pending': '#AA4A44',
     'Completed': '#AFE1AF',

@@ -22,6 +22,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import MovieCreationIcon from "@material-ui/icons/MovieCreation";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import FullPageContainer from "./FullPageContainer";
+import ExistingProds from "./Producer/Existing Productions";
 import {
   ListItem,
   ListItemIcon,
@@ -217,11 +218,7 @@ const AssistantDirector = (props) => {
       <FullPageContainer>
         <main className={classes.content}>
           {outlet || (
-            <div className={classes.directorHome}>
-              <Typography component="h1" variant="h6" color="inherit" noWrap>
-                Assistant Director Home
-              </Typography>
-            </div>
+            <ExistingProds/>
           )}
         </main>
       </FullPageContainer>

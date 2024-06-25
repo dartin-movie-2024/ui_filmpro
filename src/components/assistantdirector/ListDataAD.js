@@ -59,8 +59,10 @@ const ListDataAD = ({
   const [columns, setColumns] = useState([]);
   const [filteredRows, setFilteredRows] = useState([]);
   const [loading, setLoading] = useState(true);
+  const productionId = sessionStorage.getItem("selectedProdId");
 
   // TODO: good example of how to use useEffect to fetch data
+  console.log("prodid",productionId)
   useEffect(() => {
     let isCancelled = false;
     if (!isCancelled) setLoading(true);
@@ -69,6 +71,9 @@ const ListDataAD = ({
       url: `${serverURL}/${fetchAPI}`,
       headers: {
         "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+      },
+      data: {
+        Production_id: productionId, 
       },
     })
       .then((result) => {
@@ -120,7 +125,7 @@ const ListDataAD = ({
     return () => {
       isCancelled = true;
     };
-  }, [editButtonConfig, fetchAPI, fetchType]);
+  }, [editButtonConfig, fetchAPI, fetchType,productionId]);
 
   const handleSearchChange = (event) => {
     const searchQuery = event.target.value;
