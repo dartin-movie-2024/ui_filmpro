@@ -18,6 +18,8 @@ import ApproveCharacterList from "../components/director/ApproveCharacterList";
 import ApproveLocationList from "../components/director/ApproveLocationsList";
 import ApproveSelectedCharacter from "../components/director/ApproveSelectedCharacter";
 import ApproveSelectedLocation from "../components/director/ApproveSelectedLocation";
+import ExistingProds from "../components/Producer/Existing Productions";
+
 
 export const directorRoutes = () => (
   <Route path="/director" element={<Director />}>
@@ -67,8 +69,8 @@ export const directorRoutes = () => (
         <ListData
           editButtonConfig="characterSetup"
           headerText="Character Setup"
-          fetchAPI="getCharacterSetup"
-          fetchType="GET"
+          fetchAPI="api/get_character_setup"
+          fetchType="POST"
           searchByField="characterName"
         />
       }
@@ -77,6 +79,7 @@ export const directorRoutes = () => (
     <Route path={PATHS.EDIT_LOCATIONS} element={<AssignedLocations />} />
     <Route path={PATHS.ASSIGN} element={<Assign />} />
     <Route path={PATHS.SCENE_DETAILS} element={<SceneDetails />} />
+    <Route path="/director/ExistingProds" element={<ExistingProds />} />
     <Route
       path={PATHS.LOCATION_SETUP}
       element={
