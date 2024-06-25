@@ -88,9 +88,9 @@ export const directorRoutes = () => (
         <ListData
           editButtonConfig="locationSetup"
           headerText="Location Setup"
-          fetchAPI="getLocationSetup"
-          fetchType="GET"
-          searchByField="locationName"
+          fetchAPI="api/get_location_setup"
+          fetchType="POST"
+          searchByField="Location_Name"
         />
       }
     />

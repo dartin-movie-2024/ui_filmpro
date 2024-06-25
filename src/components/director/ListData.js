@@ -55,7 +55,6 @@ const ListData = ({
     let isCancelled = false;
     if (!isCancelled) setLoading(true);
 
-    console.log("prodid", productionId);
     axios({
       method: fetchType,
       url: `${serverURL}/${fetchAPI}`,
@@ -69,13 +68,12 @@ const ListData = ({
       .then((result) => {
         if (!isCancelled) {
           let rows = result.data.result;
-          console.log(rows)
           if (!rows || rows.length === 0) {
             console.error("No data returned from API");
             return;
           }
           rows = rows.map(row => ({
-            id: row.Crew_Id || row.Scene_Id,
+            id: row.Crew_Id || row.Scene_Id || row.Location_Id,
             ...row,
           }));
 
