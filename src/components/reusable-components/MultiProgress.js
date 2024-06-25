@@ -6,8 +6,10 @@ const multiProgressColorMap = {
     'Open': '#4472c4',
     'Assigned': '#ed7d32',
     'Submitted': '#a5a5a5',
-    'Approved': '#ffbf00'
-  };
+    'Approved': '#ffbf00',
+    'Pending': '#AA4A44',
+    'Completed': '#AFE1AF',
+};
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -21,22 +23,31 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const MultiProgressComponent = ({progressItem}) => {
+const MultiProgressComponent = ({ progressItem }) => {
     const classes = useStyles();
+    // Adjusted to check if progressItem is an array
+    if (!progressItem || !Array.isArray(progressItem)) {
+        console.error('Invalid progressItem:', progressItem);
+        return <div>Invalid data</div>; // Or simply return null to render nothing
+    }
+
+    // Assuming totalScenesCount is the sum of counts from all progressItem elements
+    const totalScenesCount = progressItem.reduce((acc, item) => acc + item.count, 0);
 
     return <div className={classes.container}>
         {
-            progressItem.data.map((item, index) => {
+            progressItem.map((item, index) => {
                 return <div
                     key={index}
                     className={classes.progressItem}
                     style={{
-                        width: `${(item.count/progressItem.totalScenesCount)*100}%`,
+                        width: `${item.Percentage}%`,
+                        fontSize: '0.8rem',
                         color: "#ffffff",
-                        backgroundColor: (multiProgressColorMap[item.name] || 'gray'),
+                        backgroundColor: (multiProgressColorMap[item.Status] || 'gray'),
                     }}>
-                        <div>{item.name} ({item.count})</div>
-                        <div>{Math.ceil((item.count/progressItem.totalScenesCount)*100)}%</div>
+                    <div>{item.Status || 'NA'} ({item.count})</div>
+                    <div>{Math.ceil((item.count / totalScenesCount) * 100)}%</div>
                 </div>
             })
         }

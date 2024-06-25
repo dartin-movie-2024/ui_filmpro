@@ -103,8 +103,13 @@ function ExistingProds() {
   }
 
   const handleClickProdCrew = (prodId) => {
-    setSelectedProdId(prodId);
-    navigate(`/Prod_crew/Departments?id=${prodId}`)
+    if (window.location.href.includes("Producer")) {
+      setSelectedProdId(prodId);
+      navigate(`/Prod_crew/Departments?id=${prodId}`);
+    } else {
+      setSelectedProdId(prodId);
+      navigate(`/director/verifyCrew?id=${prodId}`);
+    }
   }
 
   useEffect(() => {
