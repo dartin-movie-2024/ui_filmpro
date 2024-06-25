@@ -68,7 +68,6 @@ const SetupComponent = ({ paths }) => {
             name: key.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()), // Transform key to a more readable format
             details: result.data[key].result,
           }));
-          console.log(transformedData);
           setData(transformedData);
         }
       } catch (err) {
