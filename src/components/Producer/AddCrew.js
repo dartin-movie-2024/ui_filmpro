@@ -2,7 +2,7 @@
 import { useState } from "react";
 //import { DatePicker, KeyboardDatePicker, KeyboardTimePicker } from "@material-ui/pickers";
 import { serverURL } from "../../constants";
-import React, { useEffect} from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import {
   Button,
@@ -21,9 +21,9 @@ const flexColumn = {
   display: "flex",
   flexDirection: "column",
 };
-const flexRow={
+const flexRow = {
   display: "flex",
-  flexDirection: "row", 
+  flexDirection: "row",
 }
 const borderBox = {
   boxSizing: "border-box",
@@ -62,22 +62,22 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     height: "100%",
     backgroundColor: "white",
-    flex:"1",
-    gap:"1%",
+    flex: "1",
+    gap: "1%",
   },
   assigncrewContent: {
     ...flexColumn,
     padding: "0 .5rem",
     height: "100%",
     overflow: "hidden",
-    flex:"1",
-    gap:"1%",
+    flex: "1",
+    gap: "1%",
   },
   card: {
     ...borderBox,
     width: "100%",
     margin: ".5rem 0",
-    flex:"1",
+    flex: "1",
   },
   DeignForm: {
     ...flexColumn,
@@ -115,39 +115,39 @@ const useStyles = makeStyles((theme) => ({
     gap: "10px",
     gridTemplateColumns: "1fr 1fr 1fr",
   },
-  Row:{
-    ...flexRow, 
-    flex:"1",
-    width:"100%",
-    justifyContent:"space-around",
-    width:"100%",
-    display:"grid",
-    width:"100%",
-    gap:"10px",
+  Row: {
+    ...flexRow,
+    flex: "1",
+    width: "100%",
+    justifyContent: "space-around",
+    width: "100%",
+    display: "grid",
+    width: "100%",
+    gap: "10px",
     gridTemplateColumns: "1fr 1fr 1fr",
   },
-  Row1:{
-    ...flexRow, 
-    flex:"1",
-    width:"100%",
-    justifyContent:"space-around",
-    width:"100%",
-    display:"grid",
-    width:"100%",
-    gap:"10px",
+  Row1: {
+    ...flexRow,
+    flex: "1",
+    width: "100%",
+    justifyContent: "space-around",
+    width: "100%",
+    display: "grid",
+    width: "100%",
+    gap: "10px",
     gridTemplateColumns: "1fr 1fr",
   },
   cardHeadercrew: {
-    height:"3px",
+    height: "3px",
     background: "#d8e8ee",
   },
-  footer:{
+  footer: {
     ...flexRow,
-    justifyContent:"space-between",
+    justifyContent: "space-between",
   },
-  gap1:{
+  gap1: {
     ...flexColumn,
-    gap:"10px",
+    gap: "10px",
   }
 }));
 
@@ -157,30 +157,30 @@ function AddCrew() {
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedSubDepartment, setSelectedSubDepartment] = useState("");
   const [selectedDesignation, setSelectedDesignation] = useState("");
-  const [selectedDOJ,handleDOJChange ] = useState(new Date());
+  const [selectedDOJ, handleDOJChange] = useState(new Date());
   const [selectedDOB, handleDOBChange] = useState(new Date());
   const [selectedPaymentType, handlePaymentTypeChange] = useState("");
   const [selectedGender, handleGenderChange] = useState("");
-  const EmpDetails=["CrewID","Gender","DOB","Band","Address","Whatsapp","CrewName","Reporting Crew","DOJ","Grade","Contact","E-Mail"];
-  const AccDetails=["Name","BankName","Account Number","IFSC Code","PAN Number","Payment Type"]
+  const EmpDetails = ["CrewID", "Gender", "DOB", "Band", "Address", "Whatsapp", "CrewName", "Reporting Crew", "DOJ", "Grade", "Contact", "E-Mail"];
+  const AccDetails = ["Name", "BankName", "Account Number", "IFSC Code", "PAN Number", "Payment Type"]
   const handleDepartmentChange = (e) => {
     const department = e.target.value;
     setSelectedDepartment(department);
-    setSelectedSubDepartment(""); 
+    setSelectedSubDepartment("");
     setSelectedDesignation("");
   };
 
   const handleSubDepartmentChange = (e) => {
     const subDepartment = e.target.value;
     setSelectedSubDepartment(subDepartment);
-    setSelectedDesignation(""); 
+    setSelectedDesignation("");
   };
 
   const handleDesignationChange = (e) => {
     const designation = e.target.value;
     setSelectedDesignation(designation);
   };
-  
+
   const [loading, setLoading] = useState(true);
   const [departments, setDepartments] = useState([]);
   const [subDepartments, setSubDepartments] = useState([]);
@@ -192,9 +192,7 @@ function AddCrew() {
       method: "GET",
       url: `${serverURL}/api/get_department`,
       headers: {
-        Authorization:
-          "Bearer " +
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
         "Content-Type": "multipart/form-data",
       },
     })
@@ -214,16 +212,14 @@ function AddCrew() {
       method: "GET",
       url: `${serverURL}/api/get_subdepartment`,
       headers: {
-        Authorization:
-          "Bearer " +
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
         "Content-Type": "multipart/form-data",
       },
     })
       .then((response) => {
         const subdepartmentData = response.data.result.map((subdepartment) => ({
           subdep: subdepartment.SubDepartment_Name,
-          dep: subdepartment.Department_Name, 
+          dep: subdepartment.Department_Name,
         }));
         setSubDepartments(subdepartmentData);
         setLoading(false);
@@ -237,16 +233,14 @@ function AddCrew() {
       method: "GET",
       url: `${serverURL}/api/get_designations`,
       headers: {
-        Authorization:
-          "Bearer " +
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
         "Content-Type": "multipart/form-data",
       },
     })
       .then((response) => {
         const designationData = response.data.result.map((designation) => ({
           des: designation.Designation_Name,
-          subdep: designation.SubDepartment_Name, 
+          subdep: designation.SubDepartment_Name,
         }));
         setDesignations(designationData);
         setLoading(false);
@@ -258,8 +252,8 @@ function AddCrew() {
   }, []);
 
 
-  const saveemployee=(e)=>{
-    
+  const saveemployee = (e) => {
+
   }
 
   return (
@@ -268,7 +262,7 @@ function AddCrew() {
         <Card className={classes.CrewForm}>
           <CardContent>
             <div className={classes.gap1}>
-            
+
               <Card>
                 <CardContent>
                   <div className={classes.row}>
@@ -289,9 +283,9 @@ function AddCrew() {
                                 {department.dep}
                               </MenuItem>
                             ))}
-                          
+
                           </Select>
-                          
+
                         </CardContent>
                       </Card>
                     </div>
@@ -315,10 +309,10 @@ function AddCrew() {
                                     {subDepartment.subdep}
                                   </MenuItem>
                                 ))}
-                              
+
                             </Select>
                           )}
-                          
+
                         </CardContent>
                       </Card>
                     </div>
@@ -342,127 +336,127 @@ function AddCrew() {
                                     {designation.des}
                                   </MenuItem>
                                 ))}
-                              
+
                             </Select>
                           )}
-                          
+
                         </CardContent>
                       </Card>
                     </div>
                   </div>
                 </CardContent>
               </Card>
-            
 
-            <div>
-              <Card>
-                <CardContent>
-              <div className={classes.Row1} style={{ marginBottom: '1rem' }}>
-            <Card style={{flex:"1",maxHeight:"300px",overflowY:"auto",}}>
-              <CardContent>
-                <CardHeader title="Employee Master" className={classes.cardHeadercrew}/> 
-                <Grid xl={2}>
-                <table>
-                  <tbody>
-                      {EmpDetails.map((emp,index)=>(
-                        <tr>
-                          <td><Card style={{flex:"1"}}><CardContent>{emp}</CardContent></Card></td>
-                          <td>
-                          {emp === "DOB" || emp === "DOJ" ? (
-                            <TextField
-                              variant="outlined"
-                              fullWidth
-                              type="date"
-                              value={selectedDOB}
-                              onChange={handleDOBChange}
-                              InputLabelProps={{
-                                shrink: true,
-                              }}
-                            />
-                          ) : emp === "Gender" ? (
-                            <Select
-                              variant="outlined"
-                              fullWidth
-                              value={selectedGender}
-                              onChange={handleGenderChange}
-                            >
-                              <MenuItem value="male">Male</MenuItem>
-                              <MenuItem value="female">Female</MenuItem>
-                              <MenuItem value="other">Other</MenuItem>
-                            </Select>
-                          ) : (
-                            <TextField variant="outlined" fullWidth />
-                          )}
-                        </td>
-                        </tr>
-                      ))}
-                  </tbody>
-                </table> 
-                </Grid>
-                <Button variant="outlined" color="primary" onClick={saveemployee}>ADD</Button>
-                <Button variant="outlined" color="primary">CANCEL</Button>            
-              </CardContent>
-            </Card>
-            <Card style={{flex:"1",maxHeight:"300px",overflowY:"auto"}}>
-              <CardContent>
-              <CardHeader title="Account Details" className={classes.cardHeadercrew}/>
-              <Grid xl={2}>
-                <table>
-                  <tbody>
-                      {AccDetails.map((acc,index)=>(
-                      <tr>
-                      <td><Card style={{flex:"1"}}><CardContent>{acc}</CardContent></Card></td>
-                    <td>
-                    {acc === "Payment Type" ? (
-                    <Select
-                      variant="outlined"
-                      fullWidth
-                      value={selectedPaymentType}
-                      onChange={handlePaymentTypeChange}
-                    >
-                      <MenuItem value="cash">Cash</MenuItem>
-                      <MenuItem value="bank">Bank Transfer</MenuItem>
-                    </Select>)
-                     :
-                  ( <TextField variant="outlined" fullWidth />
-                  )}
-                  </td>
-                  </tr>
-                      ))}
-                  </tbody>
-                </table> 
-                </Grid>   
-                <Button variant="outlined" color="primary" onClick={saveemployee}>ADD</Button>
-                <Button variant="outlined" color="primary">CANCEL</Button>     
-              </CardContent>
-            </Card>
 
-            </div>
-            </CardContent>
-            </Card>
-            </div>
+              <div>
+                <Card>
+                  <CardContent>
+                    <div className={classes.Row1} style={{ marginBottom: '1rem' }}>
+                      <Card style={{ flex: "1", maxHeight: "300px", overflowY: "auto", }}>
+                        <CardContent>
+                          <CardHeader title="Employee Master" className={classes.cardHeadercrew} />
+                          <Grid xl={2}>
+                            <table>
+                              <tbody>
+                                {EmpDetails.map((emp, index) => (
+                                  <tr>
+                                    <td><Card style={{ flex: "1" }}><CardContent>{emp}</CardContent></Card></td>
+                                    <td>
+                                      {emp === "DOB" || emp === "DOJ" ? (
+                                        <TextField
+                                          variant="outlined"
+                                          fullWidth
+                                          type="date"
+                                          value={selectedDOB}
+                                          onChange={handleDOBChange}
+                                          InputLabelProps={{
+                                            shrink: true,
+                                          }}
+                                        />
+                                      ) : emp === "Gender" ? (
+                                        <Select
+                                          variant="outlined"
+                                          fullWidth
+                                          value={selectedGender}
+                                          onChange={handleGenderChange}
+                                        >
+                                          <MenuItem value="male">Male</MenuItem>
+                                          <MenuItem value="female">Female</MenuItem>
+                                          <MenuItem value="other">Other</MenuItem>
+                                        </Select>
+                                      ) : (
+                                        <TextField variant="outlined" fullWidth />
+                                      )}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </Grid>
+                          <Button variant="outlined" color="primary" onClick={saveemployee}>ADD</Button>
+                          <Button variant="outlined" color="primary">CANCEL</Button>
+                        </CardContent>
+                      </Card>
+                      <Card style={{ flex: "1", maxHeight: "300px", overflowY: "auto" }}>
+                        <CardContent>
+                          <CardHeader title="Account Details" className={classes.cardHeadercrew} />
+                          <Grid xl={2}>
+                            <table>
+                              <tbody>
+                                {AccDetails.map((acc, index) => (
+                                  <tr>
+                                    <td><Card style={{ flex: "1" }}><CardContent>{acc}</CardContent></Card></td>
+                                    <td>
+                                      {acc === "Payment Type" ? (
+                                        <Select
+                                          variant="outlined"
+                                          fullWidth
+                                          value={selectedPaymentType}
+                                          onChange={handlePaymentTypeChange}
+                                        >
+                                          <MenuItem value="cash">Cash</MenuItem>
+                                          <MenuItem value="bank">Bank Transfer</MenuItem>
+                                        </Select>)
+                                        :
+                                        (<TextField variant="outlined" fullWidth />
+                                        )}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </Grid>
+                          <Button variant="outlined" color="primary" onClick={saveemployee}>ADD</Button>
+                          <Button variant="outlined" color="primary">CANCEL</Button>
+                        </CardContent>
+                      </Card>
+
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
               {/* <div className={classes.Row} style={{ marginBottom: '1rem' }}> */}
               <div >
-            <Card style={{flex:"1"}}>
-              <CardContent className={classes.footer}>
-              <div className={classes.Row1} style={{ marginBottom: '1rem' }}>
-                <div>
-              <Button variant="contained" color="primary">SEARCH DATABASE</Button>
-              </div>
-              <div>
-                <Button variant="contained" color="primary" style={{float:"right"}}>BULK UPLOAD</Button>
-                </div>
-                </div>
-                </CardContent>
+                <Card style={{ flex: "1" }}>
+                  <CardContent className={classes.footer}>
+                    <div className={classes.Row1} style={{ marginBottom: '1rem' }}>
+                      <div>
+                        <Button variant="contained" color="primary">SEARCH DATABASE</Button>
+                      </div>
+                      <div>
+                        <Button variant="contained" color="primary" style={{ float: "right" }}>BULK UPLOAD</Button>
+                      </div>
+                    </div>
+                  </CardContent>
                 </Card>
-                </div>
-            {/* </div> */}
+              </div>
+              {/* </div> */}
             </div>
           </CardContent>
         </Card>
-      
+
       </div>
-    </div>   
+    </div>
   );
 }
 

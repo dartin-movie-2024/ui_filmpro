@@ -173,9 +173,7 @@ function Designations() {
       method: "GET",
       url: `${serverURL}/api/get_department`,
       headers: {
-        Authorization:
-          "Bearer " +
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
         "Content-Type": "multipart/form-data",
       },
     })
@@ -195,16 +193,14 @@ function Designations() {
       method: "GET",
       url: `${serverURL}/api/get_subdepartment`,
       headers: {
-        Authorization:
-          "Bearer " +
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
         "Content-Type": "multipart/form-data",
       },
     })
       .then((response) => {
         const subdepartmentData = response.data.result.map((subdepartment) => ({
           subdep: subdepartment.SubDepartment_Name,
-          dep: subdepartment.Department_Name, 
+          dep: subdepartment.Department_Name,
         }));
         setSubDepartments(subdepartmentData);
         setLoading(false);
@@ -218,16 +214,14 @@ function Designations() {
       method: "GET",
       url: `${serverURL}/api/get_designations`,
       headers: {
-        Authorization:
-          "Bearer " +
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
         "Content-Type": "multipart/form-data",
       },
     })
       .then((response) => {
         const designationData = response.data.result.map((designation) => ({
           des: designation.Designation_Name,
-          subdep: designation.SubDepartment_Name, 
+          subdep: designation.SubDepartment_Name,
         }));
         setDesignations(designationData);
         setLoading(false);

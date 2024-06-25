@@ -207,7 +207,7 @@ const SelectedLocationsList = () => {
       method: "POST",
       url: `${serverURL}/api/get_location_setup`,
       headers: {
-        Authorization: "Bearer " + storedData,
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
       },
     })
       .then(({ data: { result = [] } }) =>

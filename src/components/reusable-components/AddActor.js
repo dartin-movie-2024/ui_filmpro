@@ -90,7 +90,7 @@ const AddActor = () => {
       method: "POST",
       url: `${serverURL}/api/create_actor`,
       headers: {
-        Authorization: "Bearer " + storedData,
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
       },
       data: formData,
     })

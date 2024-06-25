@@ -183,7 +183,7 @@ const UploadScript = ({ onSubmit }) => {
       .post(`${serverURL}/character`, sceneData, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+          "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
         },
       })
       .then((response) => {
@@ -226,7 +226,7 @@ const UploadScript = ({ onSubmit }) => {
       .post(`${serverURL}/scene`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+          "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
         },
       })
       .then((response) => {
@@ -286,7 +286,7 @@ const UploadScript = ({ onSubmit }) => {
           )}
         </div>
         <div className={classes.scriptPreview}>
-            {selectedFile && loremIpsum}
+          {selectedFile && loremIpsum}
         </div>
       </div>
       <form onSubmit={handleSubmit} className={classes.sceneForm}>
@@ -669,199 +669,199 @@ const UploadScript = ({ onSubmit }) => {
       <div className={classes.appBarSpacer} />
       <Container maxWidth="xl" className={classes.container}>
         {/* <Content /> *///}
-        /*
-        <Grid spacing={1}>
-          <form onSubmit={handleSubmit}>
-            {/* Chart *///}
-            /*
-          <Grid item xs={12} md={12} lg={12}>
-              <Paper>
-                {/* <Chart /> *///}
-                /*
-                <div className={classes.uploadContainer}>
-                  <Typography
-                    variant="h5"
-                    component="h2"
-                    className={classes.heading}
-                  >
-                    Upload your Script here
+/*
+<Grid spacing={1}>
+  <form onSubmit={handleSubmit}>
+    {/* Chart *///}
+/*
+<Grid item xs={12} md={12} lg={12}>
+  <Paper>
+    {/* <Chart /> *///}
+/*
+<div className={classes.uploadContainer}>
+  <Typography
+    variant="h5"
+    component="h2"
+    className={classes.heading}
+  >
+    Upload your Script here
+  </Typography>
+  <input
+    accept="*"
+    className={classes.input}
+    id="contained-button-file"
+    type="file"
+    onChange={handleFileInput}
+  />
+  <label htmlFor="contained-button-file">
+    <Button
+      variant="contained"
+      color="default"
+      startIcon={<CloudUploadIcon />}
+      className={classes.button}
+      component="span"
+    >
+      Upload
+    </Button>
+  </label>
+  {selectedFile && (
+    <>
+      <span className={classes.fileName}>
+        {selectedFile.name}
+      </span>
+      <Button
+        variant="contained"
+        color="secondary"
+        className={classes.button}
+        startIcon={<DeleteIcon />}
+        onClick={handleRemoveFile}
+      >
+        Remove
+      </Button>
+    </>
+  )}
+  {selectedFile && (
+    <>
+      <div className={classes.accordionContainer}>
+        {data.map((item, index) => (
+          <Accordion
+            key={item.name}
+            expanded={expanded === item.name}
+            onChange={handleChange(item.name)}
+          >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls={`${item.name}-content`}
+              id={`${item.name}-header`}
+              overlap="rectangular"
+            >
+              <div className={classes.column}>
+                <Typography className={classes.heading}>
+                  Scene{index + 1}
+                </Typography>
+              </div>
+            </AccordionSummary>
+            <AccordionDetails className={classes.details}>
+              <Grid container direction="row">
+                <Grid item sm={3}>
+                  <Typography>
+                    Shoot Town
+                    <br />
+                    <TextField
+                      label="Town"
+                      variant="outlined"
+                      inputProps={{
+                        name: "shootTown",
+                        id: item.name + "Town",
+                      }}
+                      fullWidth
+                      className={classes.selectEmpty}
+                      onChange={handleDataChange(index)}
+                    />
                   </Typography>
-                  <input
-                    accept="*"
-                    className={classes.input}
-                    id="contained-button-file"
-                    type="file"
-                    onChange={handleFileInput}
+                </Grid>
+                <Grid item sx={1}>
+                  <Divider
+                    orientation="vertical"
+                    variant="middle"
+                    fullWidth
                   />
-                  <label htmlFor="contained-button-file">
-                    <Button
-                      variant="contained"
-                      color="default"
-                      startIcon={<CloudUploadIcon />}
-                      className={classes.button}
-                      component="span"
+                </Grid>
+                <Grid item sm={2}>
+                  <Typography>
+                    EST Shoot Time:
+                    <br />
+                    <FormControl
+                      variant="outlined"
+                      fullWidth
+                      className={classes.selectEmpty}
                     >
-                      Upload
-                    </Button>
-                  </label>
-                  {selectedFile && (
-                    <>
-                      <span className={classes.fileName}>
-                        {selectedFile.name}
-                      </span>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        className={classes.button}
-                        startIcon={<DeleteIcon />}
-                        onClick={handleRemoveFile}
+                      <InputLabel htmlFor="outlined-age-native-simple">
+                        Shoot Time
+                      </InputLabel>
+                      <Select
+                        native
+                        label={`${item.name}-ShootTime`}
+                        autoWidth
+                        inputProps={{
+                          name: "shootTime",
+                          id:
+                            item.name +
+                            "outlined-age-native-simple",
+                        }}
+                        onChange={handleDataChange(index)}
                       >
-                        Remove
-                      </Button>
-                    </>
-                  )}
-                  {selectedFile && (
-                    <>
-                      <div className={classes.accordionContainer}>
-                        {data.map((item, index) => (
-                          <Accordion
-                            key={item.name}
-                            expanded={expanded === item.name}
-                            onChange={handleChange(item.name)}
-                          >
-                            <AccordionSummary
-                              expandIcon={<ExpandMoreIcon />}
-                              aria-controls={`${item.name}-content`}
-                              id={`${item.name}-header`}
-                              overlap="rectangular"
-                            >
-                              <div className={classes.column}>
-                                <Typography className={classes.heading}>
-                                  Scene{index + 1}
-                                </Typography>
-                              </div>
-                            </AccordionSummary>
-                            <AccordionDetails className={classes.details}>
-                              <Grid container direction="row">
-                                <Grid item sm={3}>
-                                  <Typography>
-                                    Shoot Town
-                                    <br />
-                                    <TextField
-                                      label="Town"
-                                      variant="outlined"
-                                      inputProps={{
-                                        name: "shootTown",
-                                        id: item.name + "Town",
-                                      }}
-                                      fullWidth
-                                      className={classes.selectEmpty}
-                                      onChange={handleDataChange(index)}
-                                    />
-                                  </Typography>
-                                </Grid>
-                                <Grid item sx={1}>
-                                  <Divider
-                                    orientation="vertical"
-                                    variant="middle"
-                                    fullWidth
-                                  />
-                                </Grid>
-                                <Grid item sm={2}>
-                                  <Typography>
-                                    EST Shoot Time:
-                                    <br />
-                                    <FormControl
-                                      variant="outlined"
-                                      fullWidth
-                                      className={classes.selectEmpty}
-                                    >
-                                      <InputLabel htmlFor="outlined-age-native-simple">
-                                        Shoot Time
-                                      </InputLabel>
-                                      <Select
-                                        native
-                                        label={`${item.name}-ShootTime`}
-                                        autoWidth
-                                        inputProps={{
-                                          name: "shootTime",
-                                          id:
-                                            item.name +
-                                            "outlined-age-native-simple",
-                                        }}
-                                        onChange={handleDataChange(index)}
-                                      >
-                                        <option aria-label="None" value="" />
-                                        <option value={1}>1</option>
-                                        <option value={2}>2</option>
-                                        <option value={3}>3</option>
-                                        <option value={4}>4</option>
-                                        <option value={5}>5</option>
-                                        <option value={6}>6</option>
-                                      </Select>
-                                    </FormControl>
-                                  </Typography>
-                                </Grid>
-                                <Grid item sx={1}>
-                                  <Divider
-                                    orientation="vertical"
-                                    variant="middle"
-                                    fullWidth
-                                  />
-                                </Grid>
-                                <Grid item sm={3}>
-                                  <Typography>
-                                    Scene Script:
-                                    <br />
-                                    <TextareaAutosize
-                                      className={classes.textArea}
-                                      maxRows={4}
-                                      minRows={4}
-                                      aria-label="Screen script"
-                                      placeholder="Script"
-                                      defaultValue={item.script}
-                                    />
-                                  </Typography>
-                                </Grid>
-                              </Grid>
-                              {/* </div> *///}
-                              /*
-                            </AccordionDetails>
-                            {/* <Divider />
-                            <AccordionActions>
-                              <Button size="small">Cancel</Button>
-                              <Button size="small" color="primary">
-                                Save
-                              </Button>
-                            </AccordionActions> *///}
-                            /*
-                          </Accordion>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </div>
-              </Paper>
-            </Grid>
-            <Grid>
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                //disabled={(scenesDataList.length != data.length)}
-                type="submit"
-              >
-                Submit
-              </Button>
-            </Grid>
-          </form>
-        </Grid>
-        <Box pt={4}>
-          <Copyright />
-        </Box>
-      </Container>
-    </div>
-  );
+                        <option aria-label="None" value="" />
+                        <option value={1}>1</option>
+                        <option value={2}>2</option>
+                        <option value={3}>3</option>
+                        <option value={4}>4</option>
+                        <option value={5}>5</option>
+                        <option value={6}>6</option>
+                      </Select>
+                    </FormControl>
+                  </Typography>
+                </Grid>
+                <Grid item sx={1}>
+                  <Divider
+                    orientation="vertical"
+                    variant="middle"
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item sm={3}>
+                  <Typography>
+                    Scene Script:
+                    <br />
+                    <TextareaAutosize
+                      className={classes.textArea}
+                      maxRows={4}
+                      minRows={4}
+                      aria-label="Screen script"
+                      placeholder="Script"
+                      defaultValue={item.script}
+                    />
+                  </Typography>
+                </Grid>
+              </Grid>
+              {/* </div> *///}
+/*
+</AccordionDetails>
+{/* <Divider />
+<AccordionActions>
+<Button size="small">Cancel</Button>
+<Button size="small" color="primary">
+  Save
+</Button>
+</AccordionActions> *///}
+/*
+</Accordion>
+))}
+</div>
+</>
+)}
+</div>
+</Paper>
+</Grid>
+<Grid>
+<Button
+variant="contained"
+color="primary"
+className={classes.button}
+//disabled={(scenesDataList.length != data.length)}
+type="submit"
+>
+Submit
+</Button>
+</Grid>
+</form>
+</Grid>
+<Box pt={4}>
+<Copyright />
+</Box>
+</Container>
+</div>
+);
 };
 
 export default UploadScript;*/
