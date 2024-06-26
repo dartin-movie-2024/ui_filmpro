@@ -256,7 +256,7 @@ const CharacterCardList = ({ fetchAPI, fetchType }) => {
             onChange={handleAssignAD}
           >
             {adList.map((ad) => (
-              <MenuItem value={ad.id}>{ad.name}</MenuItem>
+              <MenuItem key={ad.id} value={ad.id}>{ad.name}</MenuItem>
             ))}
           </Select>
         </FormControl>
