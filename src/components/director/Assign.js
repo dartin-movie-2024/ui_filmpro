@@ -135,7 +135,8 @@ const Assign = (props) => {
     {
       title: "Assigned Characters",
       subHeader: "",
-      apiEndpoint: "api/director_search/assign_character",
+      //Replaced "api/director_search/assign_character"
+      apiEndpoint: "/api/status_character",
       status: "Assigned",
     },
     {
@@ -168,8 +169,8 @@ const Assign = (props) => {
     <div className={classes.container}>
       <div className={classes.containerBody}>
         <div className={classes.cardsContainer}>
-          {cards.map((card) => (
-            <Card className={classes.card}>
+          {cards.map((card, index) => (
+            <Card key={index} className={classes.card}>
               <CardHeader
                 className={classes.cardHeader}
                 title={card.title}
@@ -215,11 +216,9 @@ const CardContentContainer = function ({ card }) {
 
         const responseKey = statusKeyMapping[card.status] || '';
         const responseData = response.data[`${responseKey} records`] || response.data["Submitted records"] || [];
-        console.log(responseData);
         const allData = Array.isArray(responseData) ? responseData : [];
 
         const filteredData = allData.filter(item => item.Status === card.status);
-
         if (Array.isArray(filteredData)) {
           setData(filteredData);
         }
@@ -235,19 +234,12 @@ const CardContentContainer = function ({ card }) {
     <div className={classes.cardContentContainer}>
       {data.map((item) => {
         return (
-          <Card key={item.id} className={classes.cardItem}>
+          <Card key={item.id || item.Scene_Id} className={classes.cardItem}>
             <div className={classes.cardItemHeader}>
               <span>Scene {item.Scene_Id}</span>
               <b>Detailed view</b>
             </div>
             <div className={classes.cardItemBody}>
-              {/* <div>Assigned To: {item.Assigned_To}</div>
-              <div>Assigned Date: {item.Assigned_date}</div>
-              <div>Location ID: {item.Location_Id}</div>
-              <div>No. Of Scenes: {item.No_Of_Scenes}</div>
-              <div>Screen Time (Minutes): {item.Screen_Time_Minutes}</div>
-              <div>Shoot Time (Minutes): {item.Shoot_Time_Minutes}</div>
-              <div>Special Requirements: {item.Special_requirements}</div> */}
               {card.title === "Open Scenes" || card.title === "Submitted Scenes" || card.title === "Assigned Scenes" && (
                 <div>Description: {item.Short_description}</div>
               )}
