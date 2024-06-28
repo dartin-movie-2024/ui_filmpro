@@ -36,7 +36,7 @@ const ApproveLocationList = ({ fetchAPI, fetchType }) => {
       url: `${serverURL}/${fetchAPI}`,
       headers: {
         "Content-Type": "application/json",
-        Authorization:"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
       },
     })
       .then(({ data: { result = [] } }) => {

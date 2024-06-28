@@ -5,14 +5,8 @@ import {
   CardContent,
   CardHeader,
   CardActions,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   makeStyles,
 } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { serverURL } from "../../constants";
 
@@ -141,7 +135,8 @@ const Assign = (props) => {
     {
       title: "Assigned Characters",
       subHeader: "",
-      apiEndpoint: "api/director_search/assign_character",
+      //Replaced "api/director_search/assign_character"
+      apiEndpoint: "/api/status_character",
       status: "Assigned",
     },
     {
@@ -169,13 +164,13 @@ const Assign = (props) => {
       status: "Completed",
     },
   ];
-     
+
   return (
     <div className={classes.container}>
       <div className={classes.containerBody}>
         <div className={classes.cardsContainer}>
-          {cards.map((card) => (
-            <Card className={classes.card}>
+          {cards.map((card, index) => (
+            <Card key={index} className={classes.card}>
               <CardHeader
                 className={classes.cardHeader}
                 title={card.title}
@@ -200,67 +195,57 @@ const Assign = (props) => {
 const CardContentContainer = function ({ card }) {
   const classes = useStyles();
   const [data, setData] = useState([]);
-  useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const storedData = localStorage.getItem("authToken");
-  
-          const response = await axios({
-            method: "POST",
-            url: `${serverURL}${card.apiEndpoint}`,
-            headers: {
-              "Content-Type": "application/json",
-              Authorization:"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJQcm9kdWN0aW9uX2lkIjoiMyIsImxvZ2luX3R5cGUiOiJBZG1pbiJ9.ekUr9ZiKEODQFqLOSTM1XTDqkLiq3YQgcxtlDjgin3c",
-            },
-          });
-          const statusKeyMapping = {
-            'Open': 'Open',
-            'Assigned': 'Assigned',
-            'Completed': 'Completed',
-          };
-          //console.log(response)
-          const responseKey = statusKeyMapping[card.status] || '';
-           const responseData = response.data[`${responseKey} records`] || response.data["Submitted records"] || [];
-          console.log(responseData)
-          const allData = Array.isArray(responseData) ? responseData : [];
-          //console.log(allData)
-        
 
-        const filteredData =allData.filter(item => item.Status === card.status);
-       
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios({
+          method: "POST",
+          url: `${serverURL}${card.apiEndpoint}`,
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
+          },
+        });
+
+        const statusKeyMapping = {
+          'Open': 'Open',
+          'Assigned': 'Assigned',
+          'Completed': 'Completed',
+        };
+
+        const responseKey = statusKeyMapping[card.status] || '';
+        const responseData = response.data[`${responseKey} records`] || response.data["Submitted records"] || [];
+        const allData = Array.isArray(responseData) ? responseData : [];
+
+        const filteredData = allData.filter(item => item.Status === card.status);
         if (Array.isArray(filteredData)) {
           setData(filteredData);
-          //console.log(filteredData);
-         }
+        }
       } catch (error) {
         console.error(`Error fetching data for ${card.title}:`, error);
       }
     };
     fetchData();
-  }, [card.title,card.apiEndpoint]);
+  }, [card.title, card.apiEndpoint, card.status]);
+
+
   return (
     <div className={classes.cardContentContainer}>
       {data.map((item) => {
         return (
-          <Card key={item.id} className={classes.cardItem}>
+          <Card key={item.id || item.Scene_Id} className={classes.cardItem}>
             <div className={classes.cardItemHeader}>
               <span>Scene {item.Scene_Id}</span>
               <b>Detailed view</b>
             </div>
             <div className={classes.cardItemBody}>
-            {/* <div>Assigned To: {item.Assigned_To}</div>
-              <div>Assigned Date: {item.Assigned_date}</div>
-              <div>Location ID: {item.Location_Id}</div>
-              <div>No. Of Scenes: {item.No_Of_Scenes}</div>
-              <div>Screen Time (Minutes): {item.Screen_Time_Minutes}</div>
-              <div>Shoot Time (Minutes): {item.Shoot_Time_Minutes}</div>
-              <div>Special Requirements: {item.Special_requirements}</div> */}
-             {card.title === "Open Scenes" || card.title === "Submitted Scenes" || card.title === "Assigned Scenes"  && (
+              {card.title === "Open Scenes" || card.title === "Submitted Scenes" || card.title === "Assigned Scenes" && (
                 <div>Description: {item.Short_description}</div>
               )}
               {(card.title === "Open Locations" || card.title === "Submitted Locations" || card.title === "Assigned Locations") && (
                 <div>Description: {item.AD_Instructions}</div>
-              )} 
+              )}
               {(card.title === "Assigned Characters") && (
                 <div>Description: {item.Description}</div>
               )}

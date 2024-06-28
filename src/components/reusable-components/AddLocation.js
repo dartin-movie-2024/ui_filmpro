@@ -84,7 +84,7 @@ const AddLocation = () => {
       url: `${serverURL}/api/create_location`,
       data: formData,
       headers: {
-        Authorization: "Bearer " + storedData,
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
       },
     })
       .then((result) => console.log(result))

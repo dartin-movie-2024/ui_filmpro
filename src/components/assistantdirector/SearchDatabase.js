@@ -115,7 +115,7 @@ function SearchDatabase() {
       method: "GET",
       url: `${serverURL}/api/get_actors`,
       headers: {
-        Authorization: "Bearer " + storedData,
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
       },
     })
       .then(({ data: { result } }) => {
@@ -167,7 +167,7 @@ function SearchDatabase() {
       method: "post",
       url: `${serverURL}/api/approve_assign_char`,
       headers: {
-        Authorization: "Bearer " + storedData,
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
       },
       data: {
         Character_id: id,

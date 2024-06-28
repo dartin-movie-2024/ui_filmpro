@@ -95,8 +95,8 @@ const SetupComponent = ({ paths }) => {
       {data.map((setup, index) => (
         <Card className={classes.progressItem} key={index}>
           <CardHeader className={classes.cardHeader} title={<Typography variant="h6">
-                {setup.name}
-              </Typography>} />
+            {setup.name}
+          </Typography>} />
           <CardContent>
             <MultiProgressComponent
               progressItem={setup.details}

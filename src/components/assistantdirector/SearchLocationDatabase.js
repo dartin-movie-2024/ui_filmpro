@@ -75,7 +75,7 @@ const SearchLocationDatabase = () => {
       method: "POST",
       url: `${serverURL}/api/approve_assign_location`,
       headers: {
-        Authorization: "Bearer " + storedData,
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
       },
       data: {
         Scene_Location_Id: selectedSceneLocation?.id,
@@ -100,7 +100,7 @@ const SearchLocationDatabase = () => {
       method: "GET",
       url: `${serverURL}/api/master_location`,
       headers: {
-        Authorization: "Bearer " + storedData,
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
       },
     })
       .then(({ data: { result = [] } }) => {
@@ -180,15 +180,13 @@ const SearchLocationDatabase = () => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {`Set ${
-            selectedLocation?.name || "Location Name"
-          } as the location for ${selectedSceneLocation?.title}?`}
+          {`Set ${selectedLocation?.name || "Location Name"
+            } as the location for ${selectedSceneLocation?.title}?`}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {`This will set ${
-              selectedLocation?.name || "Location Name"
-            } as the location for ${selectedSceneLocation?.title}.`}
+            {`This will set ${selectedLocation?.name || "Location Name"
+              } as the location for ${selectedSceneLocation?.title}.`}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
