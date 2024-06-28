@@ -1,4 +1,5 @@
 
+
 import { Route } from "react-router-dom";
 import Director from "../components/Director";
 import ListData from "../components/director/ListData";
@@ -57,9 +58,9 @@ export const directorRoutes = () => (
         <ListData
           editButtonConfig="sceneSetup"
           headerText="Scene Setup"
-          fetchAPI="getSceneSetup"
+          fetchAPI="api/get_scene_setup"
           fetchType="GET"
-          searchByField="sceneLocation"
+          searchByField="Scene_Location"
         />
       }
     />
@@ -72,7 +73,7 @@ export const directorRoutes = () => (
           headerText="Character Setup"
           fetchAPI="api/get_character_setup"
           fetchType="POST"
-          searchByField="characterName"
+          searchByField="Character_Name"
         />
       }
     />
@@ -88,9 +89,9 @@ export const directorRoutes = () => (
         <ListData
           editButtonConfig="locationSetup"
           headerText="Location Setup"
-          fetchAPI="getLocationSetup"
-          fetchType="GET"
-          searchByField="locationName"
+          fetchAPI="api/get_location_setup"
+          fetchType="POST"
+          searchByField="Location_Name"
         />
       }
     />

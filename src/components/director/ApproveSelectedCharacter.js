@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { serverURL } from "../../constants";
-import { Button, makeStyles } from "@material-ui/core";
+import { Button, Typography, makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    fontSize: "2rem",
+    fontSize: "1rem",
     fontWeight: "bold",
     borderBottom: "1px solid #ccc",
   },
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     width: "100%",
-    padding: "1rem 0",
+    // padding: "1rem 0",
     display: "flex",
     justifyContent: "space-evenly",
     alignItems: "center",
@@ -52,12 +52,12 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "5px",
     width: "60%",
     height: "80%",
+    overflow:"auto",
   },
   nameHeader: {
     width: "100%",
     height: "40px",
-    padding: "1rem 0",
-    fontSize: "1.5rem",
+    // padding: "1rem 0",
     fontWeight: "bold",
     textAlign: "center",
   },
@@ -99,7 +99,6 @@ const useStyles = makeStyles((theme) => ({
   },
   detailName: {
     width: "40%",
-    fontWeight: "bold",
   },
   detailValue: {
     width: "60%",

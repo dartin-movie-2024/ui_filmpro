@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: theme.spacing(5),
+    // paddingTop: theme.spacing(5),
     boxSizing: "border-box",
   },
   searchContainer: {
@@ -146,7 +146,7 @@ const ListDataAD = ({
 
   return (
     <div className={classes.content}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         {headerText}
       </Typography>
       <div className={classes.searchContainer}>

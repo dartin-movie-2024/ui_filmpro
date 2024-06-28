@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { TextField, Typography, makeStyles } from "@material-ui/core";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -16,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: theme.spacing(5),
+    // paddingTop: theme.spacing(5),
     boxSizing: "border-box",
   },
   searchContainer: {
@@ -33,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
   gridContainer: {
     flexGrow: 1,
     width: "95%",
-    margin: "0 auto",
+    // margin: "0 auto",
   },
 }));
 
@@ -55,7 +56,6 @@ const ListData = ({
     let isCancelled = false;
     if (!isCancelled) setLoading(true);
 
-    console.log("prodid",productionId);
     axios({
       method: fetchType,
       url: `${serverURL}/${fetchAPI}`,
@@ -63,32 +63,31 @@ const ListData = ({
         Authorization: `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
       },
       data: {
-        Production_id: productionId, 
+        Production_id: productionId,
       },
     })
       .then((result) => {
         if (!isCancelled) {
           let rows = result.data.result;
-          console.log(rows)
           if (!rows || rows.length === 0) {
             console.error("No data returned from API");
             return;
           }
-          rows = rows.map((row) => ({
-            id: row.Crew_Id,
+          rows = rows.map(row => ({
+            id: row.Crew_Id || row.Character_id || row.Scene_Id || row.Location_Id,
             ...row,
           }));
 
           let columns = rows.length > 0
             ? Object.keys(rows[0])
-                .filter((key) => key !== "Crew_Id")
-                .map((key) => ({
-                  field: key,
-                  headerName: key
-                    .replace(/_/g, " ")
-                    .replace(/\b\w/g, (l) => l.toUpperCase()),
-                  width: 200,
-                }))
+              .filter((key) => key !== "Crew_Id")
+              .map((key) => ({
+                field: key,
+                headerName: key
+                  .replace(/_/g, " ")
+                  .replace(/\b\w/g, (l) => l.toUpperCase()),
+                width: 200,
+              }))
             : [];
 
           if (columns.length > 0) {
@@ -128,12 +127,15 @@ const ListData = ({
     const searchQuery = event.target.value.trim();
 
     const filteredRowsData = searchQuery
-      ? rows.filter((row) =>
-          row[searchByField]
+      ? rows.filter((row) => {
+        if (row[searchByField] !== undefined) {
+          return row[searchByField]
             .toString()
             .toLowerCase()
-            .includes(searchQuery.toLowerCase())
-        )
+            .includes(searchQuery.toLowerCase());
+        }
+        return false;
+      })
       : rows;
     setFilteredRows(filteredRowsData);
   };
@@ -144,7 +146,7 @@ const ListData = ({
 
   return (
     <div className={classes.content}>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         {headerText}
       </Typography>
       <div className={classes.searchContainer}>
