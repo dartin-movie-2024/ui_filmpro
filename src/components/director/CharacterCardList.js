@@ -173,15 +173,12 @@ const CharacterCardList = ({ fetchAPI, fetchType }) => {
         .map((character) => character.id),
       Assigned_To: assignedAD,
     };
-    const storedData = localStorage.getItem("myData");
 
-    axios({
-      method: "POST",
-      url: `${serverURL}/${ASSIGN_CHARACTER_TO_AD}`,
+    axios.post(`${serverURL}/${ASSIGN_CHARACTER_TO_AD}`, payload, {
       headers: {
+        "Content-Type": "application/json",
         "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
       },
-      data: { ...payload },
     })
       .then((result) => handleOpen())
       .catch((err) => console.log(err))
