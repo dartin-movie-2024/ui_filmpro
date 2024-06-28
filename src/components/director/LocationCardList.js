@@ -146,7 +146,7 @@ const LocationCardList = ({ fetchAPI, fetchType }) => {
       method: "POST",
       url: `${serverURL}/${ASSIGN_LOCATION_TO_AD}`,
       headers: {
-        Authorization: "Bearer " + storedData,
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
       },
       data: { ...payload },
     })

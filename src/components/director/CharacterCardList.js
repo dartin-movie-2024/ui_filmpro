@@ -179,7 +179,7 @@ const CharacterCardList = ({ fetchAPI, fetchType }) => {
       method: "POST",
       url: `${serverURL}/${ASSIGN_CHARACTER_TO_AD}`,
       headers: {
-        Authorization: "Bearer " + storedData,
+        "Authorization": `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
       },
       data: { ...payload },
     })
